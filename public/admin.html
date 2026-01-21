@@ -3,88 +3,174 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Panel | 1K Store</title>
+    <title>Admin Dashboard | 1K Store</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600&display=swap" rel="stylesheet">
     <style>body{font-family:'Kanit',sans-serif;}</style>
 </head>
-<body class="bg-slate-100 min-h-screen p-6">
+<body class="bg-slate-100 min-h-screen">
 
-    <div class="max-w-4xl mx-auto bg-white rounded-2xl shadow-xl overflow-hidden">
-        <div class="bg-blue-600 p-6 text-white flex justify-between items-center">
-            <h1 class="text-2xl font-bold">จัดการสินค้า (Admin)</h1>
-            <a href="/" class="text-blue-100 hover:text-white">กลับหน้าร้าน</a>
+    <nav class="bg-slate-900 text-white p-4 sticky top-0 z-50 flex justify-between items-center shadow-lg">
+        <h1 class="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-cyan-300">ADMIN CONTROL</h1>
+        <a href="/" class="text-sm bg-slate-700 px-3 py-1 rounded hover:bg-slate-600">กลับหน้าร้าน</a>
+    </nav>
+
+    <div class="container mx-auto p-4 md:p-8 space-y-8">
+        
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <div class="bg-gradient-to-br from-blue-500 to-blue-700 rounded-2xl p-6 text-white shadow-lg">
+                <p class="text-blue-100 text-sm font-medium">ยอดเติมวันนี้</p>
+                <h2 class="text-3xl font-bold mt-1">฿<span id="stat-daily">0</span></h2>
+            </div>
+            <div class="bg-white rounded-2xl p-6 shadow-md border-l-4 border-green-500">
+                <p class="text-gray-500 text-sm font-medium">ยอดเติมเดือนนี้</p>
+                <h2 class="text-3xl font-bold mt-1 text-slate-800">฿<span id="stat-monthly">0</span></h2>
+            </div>
+            <div class="bg-white rounded-2xl p-6 shadow-md border-l-4 border-purple-500">
+                <p class="text-gray-500 text-sm font-medium">ยอดเติมปีนี้</p>
+                <h2 class="text-3xl font-bold mt-1 text-slate-800">฿<span id="stat-yearly">0</span></h2>
+            </div>
+            <div class="bg-white rounded-2xl p-6 shadow-md border-l-4 border-orange-500">
+                <p class="text-gray-500 text-sm font-medium">สมาชิกทั้งหมด</p>
+                <h2 class="text-3xl font-bold mt-1 text-slate-800"><span id="stat-users">0</span> คน</h2>
+            </div>
         </div>
 
-        <div class="p-8 space-y-6">
-            <div>
-                <label class="block font-bold text-gray-700 mb-2">ชื่อสินค้า</label>
-                <input id="p_name" type="text" class="w-full border rounded-lg p-3 focus:ring-2 focus:ring-blue-500 outline-none" placeholder="เช่น ID Valorant Rank Ascendant">
+        <div class="bg-white rounded-2xl shadow-md overflow-hidden">
+            <div class="p-6 border-b flex justify-between items-center bg-slate-50">
+                <h3 class="text-xl font-bold text-slate-700">📋 รายชื่อสมาชิก</h3>
+                <input type="text" id="search-user" placeholder="ค้นหาชื่อ..." class="border rounded-lg px-3 py-1 text-sm focus:outline-blue-500" onkeyup="filterUsers()">
             </div>
-
-            <div class="grid grid-cols-2 gap-6">
-                <div>
-                    <label class="block font-bold text-gray-700 mb-2">ราคา (บาท)</label>
-                    <input id="p_price" type="number" class="w-full border rounded-lg p-3 focus:ring-2 focus:ring-blue-500 outline-none" placeholder="เช่น 150">
-                </div>
-                <div>
-                    <label class="block font-bold text-gray-700 mb-2">รายละเอียดสั้นๆ</label>
-                    <input id="p_desc" type="text" class="w-full border rounded-lg p-3 focus:ring-2 focus:ring-blue-500 outline-none" placeholder="เช่น สกินครบ มี Vandal...">
-                </div>
+            <div class="overflow-x-auto">
+                <table class="w-full text-left text-sm text-gray-600">
+                    <thead class="bg-slate-100 text-slate-700 uppercase font-bold">
+                        <tr>
+                            <th class="p-4">ID</th>
+                            <th class="p-4">Username</th>
+                            <th class="p-4">Points</th>
+                            <th class="p-4">Role</th>
+                            <th class="p-4 text-center">จัดการ</th>
+                        </tr>
+                    </thead>
+                    <tbody id="user-table-body">
+                        <tr><td colspan="5" class="p-4 text-center">กำลังโหลดข้อมูล...</td></tr>
+                    </tbody>
+                </table>
             </div>
-
-            <div>
-                <label class="block font-bold text-gray-700 mb-2">ลิงก์รูปภาพ (ใส่ได้หลายรูป คั่นด้วยลูกน้ำ ,)</label>
-                <textarea id="p_images" rows="2" class="w-full border rounded-lg p-3 focus:ring-2 focus:ring-blue-500 outline-none" placeholder="https://imgur.com/pic1.jpg, https://imgur.com/pic2.jpg"></textarea>
-                <p class="text-xs text-gray-400 mt-1">*แนะนำให้ฝากรูปที่ Imgur แล้วเอาลิงก์มาวาง</p>
-            </div>
-
-            <div class="bg-yellow-50 p-4 rounded-lg border border-yellow-200">
-                <label class="block font-bold text-yellow-800 mb-2">📦 ข้อมูลสินค้า (ID/Pass) *ลูกค้าจะเห็นเมื่อซื้อแล้ว*</label>
-                <textarea id="p_stock" rows="3" class="w-full border border-yellow-300 rounded-lg p-3 focus:ring-2 focus:ring-yellow-500 outline-none" placeholder="User: admin / Pass: 1234"></textarea>
-            </div>
-
-            <button onclick="addProduct()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 rounded-xl text-lg shadow-lg transition transform active:scale-95">
-                + ลงสินค้าทันที
-            </button>
         </div>
+
+        <div class="bg-white rounded-2xl shadow-md overflow-hidden">
+            <div class="p-6 border-b bg-slate-50">
+                <h3 class="text-xl font-bold text-slate-700">💸 ประวัติการเติมเงินล่าสุด</h3>
+            </div>
+            <div class="overflow-x-auto h-96"> <table class="w-full text-left text-sm text-gray-600">
+                    <thead class="bg-slate-100 text-slate-700 uppercase sticky top-0">
+                        <tr>
+                            <th class="p-4">เวลา</th>
+                            <th class="p-4">ลูกค้า</th>
+                            <th class="p-4">ยอดเงิน</th>
+                            <th class="p-4">ช่องทาง</th>
+                        </tr>
+                    </thead>
+                    <tbody id="history-table-body">
+                        </tbody>
+                </table>
+            </div>
+        </div>
+
     </div>
 
     <script>
-        async function addProduct() {
-            // ดึงค่าจากช่องต่างๆ
-            const payload = {
-                name: document.getElementById('p_name').value,
-                price: document.getElementById('p_price').value,
-                description: document.getElementById('p_desc').value,
-                images: document.getElementById('p_images').value,
-                stock: document.getElementById('p_stock').value
-            };
+        let allUsers = [];
 
-            if(!payload.name || !payload.price || !payload.stock) {
-                return alert("กรุณากรอกข้อมูลสำคัญให้ครบ (ชื่อ, ราคา, ข้อมูลสินค้า)");
-            }
-
-            if(!confirm("ยืนยันการลงสินค้า?")) return;
-
+        async function loadAdminData() {
             try {
-                const res = await fetch('/api/add_product', {
-                    method: 'POST',
-                    headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify(payload)
-                });
+                const res = await fetch('/api/admin_stats');
                 const data = await res.json();
 
-                if(data.success) {
-                    alert("✅ ลงสินค้าเรียบร้อย!");
-                    location.reload(); // รีเฟรชหน้าเคลียร์ช่อง
-                } else {
-                    alert("❌ เกิดข้อผิดพลาด: " + data.msg);
-                }
-            } catch (err) {
-                alert("เชื่อมต่อ Server ไม่ได้");
+                // 1. ใส่ Stats Dashboard
+                document.getElementById('stat-daily').innerText = data.stats.daily.toLocaleString();
+                document.getElementById('stat-monthly').innerText = data.stats.monthly.toLocaleString();
+                document.getElementById('stat-yearly').innerText = data.stats.yearly.toLocaleString();
+                document.getElementById('stat-users').innerText = data.users.length.toLocaleString();
+
+                // 2. ใส่ User Table
+                allUsers = data.users;
+                renderUsers(allUsers);
+
+                // 3. ใส่ History Table
+                const hBody = document.getElementById('history-table-body');
+                hBody.innerHTML = '';
+                data.history.forEach(h => {
+                    const date = new Date(h.created_at).toLocaleString('th-TH');
+                    hBody.innerHTML += `
+                        <tr class="border-b hover:bg-slate-50">
+                            <td class="p-4">${date}</td>
+                            <td class="p-4 font-bold text-blue-600">${h.users?.username || 'Unknown'}</td>
+                            <td class="p-4 text-green-600 font-bold">+${h.amount}</td>
+                            <td class="p-4">${h.type || h.method}</td>
+                        </tr>
+                    `;
+                });
+
+            } catch(err) {
+                console.error(err);
+                Swal.fire('Error', 'โหลดข้อมูลไม่สำเร็จ', 'error');
             }
         }
+
+        function renderUsers(users) {
+            const tbody = document.getElementById('user-table-body');
+            tbody.innerHTML = '';
+            users.forEach(u => {
+                tbody.innerHTML += `
+                    <tr class="border-b hover:bg-slate-50 transition">
+                        <td class="p-4 font-mono text-xs text-gray-400">${u.id.substring(0,8)}...</td>
+                        <td class="p-4 font-bold text-slate-800">${u.username}</td>
+                        <td class="p-4 font-bold text-blue-600">${u.points.toLocaleString()}</td>
+                        <td class="p-4"><span class="bg-gray-200 px-2 py-1 rounded text-xs">${u.role}</span></td>
+                        <td class="p-4 text-center">
+                            <button onclick="editUser('${u.id}', '${u.username}', ${u.points})" class="bg-yellow-400 hover:bg-yellow-500 text-white px-3 py-1 rounded shadow text-xs font-bold transition">
+                                ✏️ แก้ไข / เติมพอยท์
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            });
+        }
+
+        function filterUsers() {
+            const txt = document.getElementById('search-user').value.toLowerCase();
+            const filtered = allUsers.filter(u => u.username.toLowerCase().includes(txt));
+            renderUsers(filtered);
+        }
+
+        // ฟังก์ชันแก้ไข User / เติมพอยท์
+        async function editUser(id, name, oldPoints) {
+            const { value: newPoints } = await Swal.fire({
+                title: `จัดการ: ${name}`,
+                input: 'number',
+                inputLabel: 'แก้ไขจำนวนพอยท์ (ใส่ตัวเลขใหม่เลย)',
+                inputValue: oldPoints,
+                showCancelButton: true,
+                confirmButtonText: 'บันทึก',
+                confirmButtonColor: '#3085d6',
+            });
+
+            if (newPoints && newPoints != oldPoints) {
+                // ส่ง API Update
+                await fetch('/api/admin_update_user', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({ userId: id, points: newPoints })
+                });
+                Swal.fire('เรียบร้อย', 'อัปเดตข้อมูลสำเร็จ', 'success');
+                loadAdminData(); // รีโหลดหน้า
+            }
+        }
+
+        loadAdminData();
     </script>
 </body>
 </html>

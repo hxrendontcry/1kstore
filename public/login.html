@@ -4,96 +4,162 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>เข้าสู่ระบบ | 1K Store</title>
+    
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600&display=swap" rel="stylesheet">
-    <style>body{font-family:'Kanit',sans-serif;}</style>
+    
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600;900&display=swap" rel="stylesheet">
+    
+    <style>
+        body { font-family: 'Kanit', sans-serif; }
+        /* เอฟเฟคพื้นหลังเคลื่อนไหวเบาๆ */
+        .bg-pattern {
+            background-color: #f8fafc;
+            background-image: radial-gradient(#e2e8f0 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
+    </style>
 </head>
-<body class="bg-slate-50 min-h-screen flex items-center justify-center p-4">
+<body class="bg-pattern min-h-screen flex items-center justify-center p-4">
 
-    <div class="bg-white p-8 rounded-2xl shadow-xl w-full max-w-md border border-blue-100">
-        <div class="text-center mb-8">
-            <h1 class="text-4xl font-black text-blue-600 tracking-tighter">1K <span class="text-slate-800">STORE</span></h1>
-            <p class="text-gray-400 mt-2">เข้าสู่ระบบเพื่อเริ่มต้นซื้อสินค้า</p>
+    <div class="bg-white w-full max-w-sm md:max-w-md p-8 rounded-3xl shadow-2xl border border-white relative overflow-hidden backdrop-blur-sm">
+        
+        <div class="absolute top-0 left-0 w-full h-1.5 bg-gradient-to-r from-blue-400 via-blue-500 to-cyan-400"></div>
+
+        <div class="text-center mb-8 mt-2">
+            <a href="/" class="inline-block text-4xl font-black tracking-tighter text-blue-600 mb-2 hover:scale-105 transition-transform duration-300">
+                1K <span class="text-slate-800">STORE</span>
+            </a>
+            <p class="text-gray-400 text-sm font-light">ยินดีต้อนรับกลับครับ! กรุณาเข้าสู่ระบบ</p>
         </div>
 
-        <div class="space-y-4">
-            <div>
-                <label class="block text-gray-600 mb-1">ชื่อผู้ใช้</label>
-                <input id="username" type="text" class="w-full bg-slate-50 border border-slate-200 rounded-lg p-3 focus:outline-none focus:border-blue-500 transition" placeholder="กรอกชื่อผู้ใช้">
-            </div>
-            <div>
-                <label class="block text-gray-600 mb-1">รหัสผ่าน</label>
-                <input id="password" type="password" class="w-full bg-slate-50 border border-slate-200 rounded-lg p-3 focus:outline-none focus:border-blue-500 transition" placeholder="กรอกรหัสผ่าน">
+        <form onsubmit="handleLogin(event)" class="space-y-5">
+            
+            <div class="relative">
+                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                    </svg>
+                </div>
+                <input id="username" type="text" 
+                    class="w-full bg-slate-50 border border-slate-200 text-slate-700 text-sm rounded-xl focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-3.5 transition-all outline-none hover:bg-white" 
+                    placeholder="ชื่อผู้ใช้ (Username)" required>
             </div>
 
-            <button onclick="login()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-xl shadow-lg shadow-blue-500/30 transition transform active:scale-95">
-                เข้าสู่ระบบ
-            </button>
+            <div class="relative">
+                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                    </svg>
+                </div>
+                <input id="password" type="password" 
+                    class="w-full bg-slate-50 border border-slate-200 text-slate-700 text-sm rounded-xl focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-3.5 transition-all outline-none hover:bg-white" 
+                    placeholder="รหัสผ่าน (Password)" required>
+            </div>
 
-            <button onclick="register()" class="w-full bg-white border border-blue-200 text-blue-600 hover:bg-blue-50 font-bold py-3 rounded-xl transition">
-                สมัครสมาชิกใหม่
+            <button type="submit" 
+                class="w-full text-white bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 focus:ring-4 focus:outline-none focus:ring-blue-300 font-bold rounded-xl text-lg px-5 py-3.5 text-center shadow-lg shadow-blue-500/30 transition-all transform active:scale-95">
+                เข้าสู่ระบบทันที
             </button>
+        </form>
+
+        <div class="relative flex py-6 items-center">
+            <div class="flex-grow border-t border-gray-200"></div>
+            <span class="flex-shrink-0 mx-4 text-gray-400 text-xs">ยังไม่มีบัญชี?</span>
+            <div class="flex-grow border-t border-gray-200"></div>
         </div>
 
-        <div id="status" class="mt-4 text-center text-sm font-bold"></div>
+        <a href="register.html" class="block w-full text-center text-blue-600 bg-white border border-blue-100 hover:bg-blue-50 hover:border-blue-300 font-bold rounded-xl text-sm px-5 py-3.5 transition-all">
+            สมัครสมาชิกใหม่
+        </a>
+
+        <div class="mt-6 text-center">
+            <a href="/" class="text-xs text-gray-400 hover:text-blue-500 transition">❮ กลับไปเลือกดูสินค้า</a>
+        </div>
     </div>
 
     <script>
-        async function login() {
+        async function handleLogin(e) {
+            e.preventDefault(); // ป้องกันเว็บรีเฟรช
+
             const user = document.getElementById('username').value;
             const pass = document.getElementById('password').value;
-            const status = document.getElementById('status');
 
-            if(!user || !pass) return alert("กรุณากรอกข้อมูลให้ครบ");
-
-            status.innerHTML = '<span class="text-blue-500">กำลังตรวจสอบ...</span>';
+            // ตรวจสอบเบื้องต้น
+            if (!user || !pass) {
+                return Swal.fire({
+                    icon: 'warning',
+                    title: 'กรอกข้อมูลไม่ครบ',
+                    text: 'กรุณากรอกชื่อผู้ใช้และรหัสผ่านครับ'
+                });
+            }
 
             try {
+                // แสดง Loading
+                Swal.fire({
+                    title: 'กำลังเข้าสู่ระบบ...',
+                    text: 'รอสักครู่นะครับ',
+                    allowOutsideClick: false,
+                    didOpen: () => {
+                        Swal.showLoading();
+                    }
+                });
+
+                // ส่งข้อมูลไปหลังบ้าน (API)
                 const res = await fetch('/api/login', {
                     method: 'POST',
-                    headers: {'Content-Type': 'application/json'},
+                    headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ username: user, password: pass })
                 });
+
                 const data = await res.json();
 
                 if (data.success) {
-                    status.innerHTML = '<span class="text-green-500">เข้าสู่ระบบสำเร็จ!</span>';
-                    // บันทึกข้อมูล User ลงเครื่อง
+                    // === กรณีสำเร็จ ===
+                    
+                    // 1. บันทึกข้อมูลลงเครื่องลูกค้า (LocalStorage)
                     localStorage.setItem('user_id', data.user.id);
                     localStorage.setItem('username', data.user.username);
                     localStorage.setItem('points', data.user.points);
                     localStorage.setItem('role', data.user.role);
-                    
-                    // ไปหน้าแรก
-                    setTimeout(() => window.location.href = '/', 1000);
+
+                    // 2. แจ้งเตือนความสำเร็จ
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'ยินดีต้อนรับ!',
+                        text: `สวัสดีคุณ ${data.user.username} กำลังพาไปหน้าร้าน...`,
+                        timer: 1500,
+                        showConfirmButton: false
+                    }).then(() => {
+                        // 3. ย้ายไปหน้าแรก
+                        window.location.href = '/';
+                    });
+
                 } else {
-                    status.innerHTML = `<span class="text-red-500">${data.msg}</span>`;
+                    // === กรณีไม่สำเร็จ (รหัสผิด / ไม่มีชื่อนี้) ===
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'เข้าสู่ระบบไม่สำเร็จ',
+                        text: data.msg || 'ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง',
+                        confirmButtonText: 'ลองใหม่',
+                        confirmButtonColor: '#3b82f6'
+                    });
                 }
+
             } catch (err) {
-                status.innerHTML = '<span class="text-red-500">ระบบขัดข้อง โปรดลองใหม่</span>';
+                console.error(err);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'ระบบขัดข้อง',
+                    text: 'ไม่สามารถเชื่อมต่อกับเซิร์ฟเวอร์ได้ โปรดลองใหม่ภายหลัง'
+                });
             }
         }
-
-        async function register() {
-            const user = document.getElementById('username').value;
-            const pass = document.getElementById('password').value;
-            
-            if(!user || !pass) return alert("กรุณากรอกชื่อและรหัสผ่านที่ต้องการสมัคร");
-            
-            if(!confirm(`ยืนยันจะสมัครสมาชิกด้วยชื่อ "${user}" ใช่ไหม?`)) return;
-
-            const res = await fetch('/api/register', {
-                method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({ username: user, password: pass })
-            });
-            const data = await res.json();
-            
-            if(data.success) {
-                alert("สมัครสมาชิกเรียบร้อย! กดเข้าสู่ระบบได้เลย");
-            } else {
-                alert(data.msg);
-            }
+        
+        // เช็คว่าถ้าล็อกอินอยู่แล้ว ให้ดีดกลับหน้าแรกเลย
+        if(localStorage.getItem('username')) {
+            window.location.href = '/';
         }
     </script>
 </body>

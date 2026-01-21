@@ -1,138 +1,238 @@
 <!DOCTYPE html>
 <html lang="th">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>1K Store | แหล่งรวมไอดีเกมคุณภาพ</title>
+    
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600;900&display=swap" rel="stylesheet">
-
+    
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600;800;900&display=swap" rel="stylesheet">
+    
     <style>
-        body {
-            font-family: 'Kanit', sans-serif;
+        body { font-family: 'Kanit', sans-serif; }
+        
+        /* Animation พื้นหลัง */
+        @keyframes gradient-xy {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
         }
-
-        /* เอฟเฟคชื่อร้านไหลไปมา */
-        @keyframes gradient {
-            0% {
-                background-position: 0% 50%;
-            }
-
-            50% {
-                background-position: 100% 50%;
-            }
-
-            100% {
-                background-position: 0% 50%;
-            }
+        .animate-gradient {
+            background-size: 200% 200%;
+            animation: gradient-xy 6s ease infinite;
+        }
+        
+        /* ซ่อน Scrollbar แต่ยังเลื่อนได้ */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
         }
     </style>
 </head>
+<body class="bg-slate-50 min-h-screen flex flex-col">
 
-<body class="bg-slate-50 text-slate-800">
-
-    <nav class="bg-white shadow-md p-4 sticky top-0 z-50">
-        <div class="container mx-auto flex justify-between items-center">
-            <a href="/" class="text-3xl font-black tracking-tighter hover:scale-105 transition-transform duration-300">
-                <span
-                    class="bg-clip-text text-transparent bg-gradient-to-r from-blue-600 via-cyan-400 to-blue-600 bg-[length:200%_auto] animate-[gradient_3s_ease-in-out_infinite]">
+    <nav class="bg-white/90 backdrop-blur-md shadow-sm sticky top-0 z-50 transition-all duration-300">
+        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+            
+            <a href="/" class="group flex items-center gap-1">
+                <span class="text-3xl font-black tracking-tighter text-blue-600 drop-shadow-[0_0_8px_rgba(37,99,235,0.6)] group-hover:drop-shadow-[0_0_15px_rgba(37,99,235,0.8)] transition-all duration-300">
                     1K
                 </span>
-                <span class="text-slate-700">STORE</span>
+                <span class="text-2xl font-bold text-slate-800 group-hover:text-blue-800 transition-colors">
+                    STORE
+                </span>
+                <span class="w-2 h-2 rounded-full bg-red-500 animate-pulse mt-3 ml-0.5"></span>
             </a>
 
-            <div class="space-x-4 font-semibold">
-                <a href="#" class="text-gray-500 hover:text-blue-600">หน้าแรก</a>
-                <a href="#" class="text-gray-500 hover:text-blue-600">เติมเงิน</a>
-                <a href="login.html"
-                    class="bg-blue-600 text-white px-5 py-2 rounded-full hover:bg-blue-700 shadow-lg shadow-blue-500/30 transition">
-                    เข้าสู่ระบบ
-                </a>
+            <div class="hidden md:flex items-center space-x-6 font-medium">
+                <a href="/" class="text-blue-600">หน้าแรก</a>
+                <a href="#" onclick="Swal.fire('เร็วๆ นี้', 'ระบบเติมเงินกำลังมาครับ', 'info')" class="text-gray-500 hover:text-blue-600 transition">เติมเงิน</a>
+                <a href="#" class="text-gray-500 hover:text-blue-600 transition">ติดต่อเรา</a>
+                
+                <div id="auth-buttons">
+                    </div>
             </div>
+
+            <button class="md:hidden text-slate-700 focus:outline-none">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
+                </svg>
+            </button>
         </div>
     </nav>
 
-    <div class="container mx-auto mt-8 p-4">
-        <div
-            class="bg-gradient-to-r from-blue-600 to-cyan-500 rounded-2xl p-10 text-white text-center shadow-xl relative overflow-hidden">
-            <div
-                class="absolute top-0 left-0 w-32 h-32 bg-white opacity-10 rounded-full -translate-x-10 -translate-y-10">
+    <header class="relative overflow-hidden">
+        <div class="absolute inset-0 bg-gradient-to-r from-blue-600 via-indigo-600 to-cyan-500 animate-gradient"></div>
+        <div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-20"></div>
+        
+        <div class="container mx-auto px-4 py-16 md:py-24 relative z-10 text-center text-white">
+            <h1 class="text-4xl md:text-6xl font-black mb-4 drop-shadow-lg tracking-tight">
+                อาณาจักรไอดีเกม <span class="text-yellow-300">อันดับ 1</span>
+            </h1>
+            <p class="text-lg md:text-xl text-blue-100 max-w-2xl mx-auto mb-8 font-light">
+                ระบบอัตโนมัติ 24 ชม. • ปลอดภัย 100% • รับประกันหลังการขาย<br>
+                เริ่มความเทพของคุณได้ที่นี่ ในราคาเริ่มต้นเพียง <span class="font-bold text-white bg-white/20 px-2 rounded">10 บาท</span>
+            </p>
+            <div class="flex justify-center gap-4">
+                <a href="#product-section" class="bg-white text-blue-700 font-bold px-8 py-3 rounded-full shadow-lg hover:scale-105 hover:shadow-xl transition transform">
+                    เลือกซื้อสินค้า 🛒
+                </a>
+                <a href="#" class="bg-blue-800/50 backdrop-blur-sm border border-blue-400 text-white font-bold px-8 py-3 rounded-full hover:bg-blue-800 transition">
+                    เติมเงิน
+                </a>
             </div>
-
-            <h1 class="text-4xl md:text-6xl font-black mb-4 drop-shadow-md">ยินดีต้อนรับสู่ 1K STORE</h1>
-            <p class="text-xl opacity-90">แหล่งซื้อขายไอดีเกมที่ปลอดภัย รวดเร็ว ระบบอัตโนมัติ 24 ชม.</p>
         </div>
-    </div>
+        
+        <div class="absolute bottom-0 left-0 w-full overflow-hidden leading-[0]">
+            <svg class="relative block w-[calc(100%+1.3px)] h-[50px] md:h-[100px]" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none">
+                <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V0H0V27.35A600.21,600.21,0,0,0,321.39,56.44Z" class="fill-slate-50"></path>
+            </svg>
+        </div>
+    </header>
 
-    <div class="container mx-auto p-4 mt-8 pb-20">
-        <h2 class="text-2xl font-black text-blue-900 border-l-8 border-blue-500 pl-4 mb-8">
-            สินค้าพร้อมส่ง 🚀
-        </h2>
+    <main id="product-section" class="container mx-auto px-4 py-12 flex-grow">
+        
+        <div class="flex items-center gap-4 mb-8">
+            <div class="w-2 h-10 bg-blue-600 rounded-full"></div>
+            <h2 class="text-3xl font-black text-slate-800">สินค้าแนะนำ 🔥</h2>
+        </div>
 
-        <div id="product-grid" class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6">
-            <div class="col-span-full text-center text-gray-400 py-10 animate-pulse">
-                กำลังโหลดสินค้า...
+        <div id="product-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            <div class="col-span-full py-20 text-center">
+                <div class="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mb-4"></div>
+                <p class="text-gray-400 font-light">กำลังโหลดไอดีเทพๆ...</p>
             </div>
         </div>
-    </div>
+
+    </main>
+
+    <footer class="bg-white border-t border-slate-200 py-8 mt-8">
+        <div class="container mx-auto px-4 text-center">
+            <h3 class="font-black text-2xl text-slate-800 mb-2">1K STORE</h3>
+            <p class="text-gray-500 text-sm mb-4">ให้บริการซื้อขายไอดีเกมออนไลน์ ระบบอัตโนมัติ รวดเร็ว ปลอดภัย</p>
+            <div class="text-xs text-gray-400">
+                &copy; 2026 1K Store. All rights reserved.
+            </div>
+        </div>
+    </footer>
+
     <script>
+        // 1. ตรวจสอบว่าล็อกอินหรือยัง? เพื่อแสดงปุ่มให้ถูก
+        function checkAuth() {
+            const username = localStorage.getItem('username');
+            const points = localStorage.getItem('points') || 0;
+            const container = document.getElementById('auth-buttons');
+
+            if (username) {
+                // ถ้าล็อกอินแล้ว: แสดงชื่อ + พอยท์ + ปุ่ม Logout
+                container.innerHTML = `
+                    <div class="flex items-center gap-4">
+                        <div class="text-right hidden lg:block">
+                            <div class="text-xs text-gray-400">ยินดีต้อนรับ</div>
+                            <div class="font-bold text-slate-800">${username}</div>
+                        </div>
+                        <div class="bg-blue-50 px-3 py-1 rounded-lg border border-blue-100 flex items-center gap-1">
+                            <span class="text-yellow-500 text-lg">🪙</span>
+                            <span class="font-bold text-blue-700">${parseFloat(points).toLocaleString()}</span>
+                        </div>
+                        <button onclick="logout()" class="text-red-500 hover:bg-red-50 p-2 rounded-full transition" title="ออกจากระบบ">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                            </svg>
+                        </button>
+                    </div>
+                `;
+            } else {
+                // ถ้ายังไม่ล็อกอิน: ปุ่ม Login / Register
+                container.innerHTML = `
+                    <a href="login.html" class="bg-slate-800 text-white px-6 py-2 rounded-full font-bold hover:bg-blue-600 hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300">
+                        เข้าสู่ระบบ
+                    </a>
+                `;
+            }
+        }
+
+        // 2. ฟังก์ชันออกจากระบบ
+        function logout() {
+            Swal.fire({
+                title: 'ออกจากระบบ?',
+                text: "คุณต้องการออกจากบัญชีนี้ใช่ไหม",
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'ใช่, ออกจากระบบ'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    localStorage.clear();
+                    location.reload();
+                }
+            });
+        }
+
+        // 3. โหลดสินค้าจาก API
         async function loadProducts() {
             try {
                 const res = await fetch('/api/get_products');
                 const products = await res.json();
-
+                
                 const container = document.getElementById('product-grid');
+                container.innerHTML = ''; // ล้าง Loading
 
-                if (products.length === 0) {
-                    container.innerHTML = `<div class="col-span-full text-center text-gray-500">❌ ยังไม่มีสินค้าในขณะนี้</div>`;
+                if(products.length === 0) {
+                    container.innerHTML = `
+                        <div class="col-span-full text-center py-10 bg-white rounded-2xl border border-dashed border-gray-300">
+                            <p class="text-gray-400 text-lg">ยังไม่มีสินค้าในขณะนี้ครับ</p>
+                        </div>
+                    `;
                     return;
                 }
 
-                // ล้างข้อความ "กำลังโหลด" ออก
-                container.innerHTML = '';
-
-                // วนลูปสร้างการ์ดสินค้า
                 products.forEach(p => {
-                    // เอารูปแรกมาโชว์ (ถ้าไม่มีรูป ให้ใช้รูปกล่องแทน)
-                    const firstImage = (p.images && p.images.length > 0) ? p.images[0] : 'https://via.placeholder.com/300?text=No+Image';
-const html = `
-    <div class="bg-white ...">
-        <div class="p-5">
-            <div class="flex justify-between items-center">
-                <span class="text-2xl font-black text-blue-600">฿${p.price}</span>
-                
-                <a href="/product.html?id=${p.id}" class="bg-slate-800 text-white px-4 py-2 rounded-lg font-bold hover:bg-blue-600 transition shadow-lg shadow-blue-500/20">
-                    ดูรายละเอียด >
-                </a>
-            </div>
-        </div>
-    </div>
-`;
-                    container.innerHTML += html;
+                    // หารูปแรก ถ้าไม่มีใช้ Placeholder
+                    const img = (p.images && p.images.length > 0) ? p.images[0] : 'https://via.placeholder.com/400x300?text=No+Image';
+
+                    container.innerHTML += `
+                        <div class="bg-white rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 border border-slate-100 overflow-hidden group flex flex-col h-full">
+                            <div class="relative h-48 overflow-hidden bg-gray-100">
+                                <img src="${img}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                                <div class="absolute top-2 right-2 bg-black/60 backdrop-blur-sm text-white text-xs px-2 py-1 rounded">
+                                    ID: ${p.id}
+                                </div>
+                            </div>
+
+                            <div class="p-5 flex-grow flex flex-col">
+                                <h3 class="font-bold text-lg text-slate-800 mb-1 line-clamp-1 group-hover:text-blue-600 transition">${p.name}</h3>
+                                <p class="text-gray-500 text-sm line-clamp-2 mb-4 flex-grow">${p.description || 'ไม่มีรายละเอียด'}</p>
+                                
+                                <div class="flex items-center justify-between mt-auto pt-4 border-t border-slate-50">
+                                    <div class="flex flex-col">
+                                        <span class="text-xs text-gray-400">ราคา</span>
+                                        <span class="text-2xl font-black text-red-500">฿${parseFloat(p.price).toLocaleString()}</span>
+                                    </div>
+                                    <a href="product.html?id=${p.id}" class="bg-blue-50 text-blue-600 border border-blue-200 hover:bg-blue-600 hover:text-white hover:border-blue-600 px-4 py-2 rounded-xl font-bold transition-all active:scale-95">
+                                        ดูรายละเอียด
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    `;
                 });
 
-            } catch (err) {
+            } catch(err) {
                 console.error(err);
+                document.getElementById('product-grid').innerHTML = '<div class="col-span-full text-red-500 text-center">โหลดสินค้าไม่สำเร็จ</div>';
             }
         }
 
-        // โหลดสินค้าทันทีที่เปิดเว็บ
+        // เริ่มทำงาน
+        checkAuth();
         loadProducts();
-
-        // ฟังก์ชันกดซื้อ (เดี๋ยวมาทำต่อ)
-        function buyProduct(id) {
-            // เช็คว่าล็อกอินยัง?
-            const user = localStorage.getItem('username');
-            if (!user) {
-                alert('กรุณาเข้าสู่ระบบก่อนซื้อสินค้าครับ');
-                window.location.href = '/login.html';
-                return;
-            }
-            // ถ้าล็อกอินแล้ว ให้ไปหน้ายืนยัน (เดี๋ยวทำ Step หน้า)
-            alert('คุณกำลังจะซื้อสินค้า ID: ' + id + '\n(เดี๋ยวมาทำระบบตัดเงินต่อนะครับ)');
-        }
     </script>
 </body>
-
 </html>

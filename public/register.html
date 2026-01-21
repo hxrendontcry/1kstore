@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>สมัครสมาชิก | 1K Store</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script> <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600;900&display=swap" rel="stylesheet">
+    <style>body{font-family:'Kanit',sans-serif;}</style>
+</head>
+<body class="bg-slate-50 min-h-screen flex items-center justify-center p-4">
+
+    <div class="bg-white w-full max-w-md p-8 rounded-3xl shadow-2xl border border-blue-100 relative overflow-hidden">
+        <div class="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-blue-400 to-blue-600"></div>
+
+        <div class="text-center mb-8">
+            <h1 class="text-3xl font-black text-slate-800">สร้างบัญชีใหม่ 🚀</h1>
+            <p class="text-gray-400 text-sm mt-2">สมัครสมาชิกเพื่อเข้าสู่โลกของ 1K Store</p>
+        </div>
+
+        <form onsubmit="handleRegister(event)" class="space-y-5">
+            <div>
+                <label class="block text-sm font-bold text-gray-700 mb-1">ชื่อผู้ใช้ (Username)</label>
+                <input id="reg_user" type="text" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 focus:outline-none focus:ring-2 focus:ring-blue-500 transition" placeholder="อย่างน้อย 4 ตัวอักษร" required>
+            </div>
+            
+            <div>
+                <label class="block text-sm font-bold text-gray-700 mb-1">รหัสผ่าน (Password)</label>
+                <input id="reg_pass" type="password" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 focus:outline-none focus:ring-2 focus:ring-blue-500 transition" placeholder="อย่างน้อย 4 ตัวอักษร" required>
+            </div>
+
+            <div>
+                <label class="block text-sm font-bold text-gray-700 mb-1">ยืนยันรหัสผ่าน</label>
+                <input id="reg_pass_confirm" type="password" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 focus:outline-none focus:ring-2 focus:ring-blue-500 transition" placeholder="กรอกรหัสผ่านอีกครั้ง" required>
+            </div>
+
+            <button type="submit" class="w-full bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-700 hover:to-blue-600 text-white font-bold py-3.5 rounded-xl shadow-lg shadow-blue-500/30 transition transform active:scale-95">
+                ยืนยันการสมัคร
+            </button>
+        </form>
+
+        <div class="mt-6 text-center">
+            <p class="text-gray-500 text-sm">มีบัญชีอยู่แล้ว? <a href="login.html" class="text-blue-600 font-bold hover:underline">เข้าสู่ระบบ</a></p>
+        </div>
+    </div>
+
+    <script>
+        async function handleRegister(e) {
+            e.preventDefault(); // กันเว็บรีเฟรช
+
+            const user = document.getElementById('reg_user').value;
+            const pass = document.getElementById('reg_pass').value;
+            const passConfirm = document.getElementById('reg_pass_confirm').value;
+
+            // 1. เช็คเงื่อนไข (Validation)
+            if(user.length < 4) {
+                return Swal.fire('ข้อผิดพลาด', 'ชื่อผู้ใช้ต้องมีอย่างน้อย 4 ตัวอักษรครับ', 'warning');
+            }
+            if(pass.length < 4) {
+                return Swal.fire('ข้อผิดพลาด', 'รหัสผ่านต้องมีอย่างน้อย 4 ตัวอักษรครับ', 'warning');
+            }
+            if(pass !== passConfirm) {
+                return Swal.fire('ข้อผิดพลาด', 'รหัสผ่านทั้งสองช่องไม่ตรงกัน', 'error');
+            }
+
+            // 2. ส่งข้อมูลไปหลังบ้าน
+            try {
+                // แสดง Loading
+                Swal.fire({ title: 'กำลังบันทึกข้อมูล...', didOpen: () => Swal.showLoading() });
+
+                const res = await fetch('/api/register', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({ username: user, password: pass })
+                });
+                const data = await res.json();
+
+                if(data.success) {
+                    // สมัครสำเร็จ -> แจ้งเตือน -> เด้งกลับหน้า Login
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'สมัครสมาชิกเรียบร้อย!',
+                        text: 'ยินดีต้อนรับครับ กำลังพาไปหน้าเข้าสู่ระบบ...',
+                        timer: 2000,
+                        showConfirmButton: false
+                    }).then(() => {
+                        window.location.href = 'login.html';
+                    });
+                } else {
+                    Swal.fire('เกิดข้อผิดพลาด', data.msg, 'error');
+                }
+            } catch (err) {
+                Swal.fire('Error', 'เชื่อมต่อระบบไม่ได้ โปรดลองใหม่', 'error');
+            }
+        }
+    </script>
+</body>
+</html>
