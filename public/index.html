@@ -1,16 +1,17 @@
 <!DOCTYPE html>
 <html lang="th" class="scroll-smooth">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>1K Store | The Premium Gaming Marketplace</title>
-    
+
     <script src="https://cdn.tailwindcss.com"></script>
-    
+
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    
+
     <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;700;900&display=swap" rel="stylesheet">
-    
+
     <script>
         // ตั้งค่า Tailwind colors เพิ่มเติมให้ดูหรู
         tailwind.config = {
@@ -33,7 +34,7 @@
             }
         }
     </script>
-    
+
     <style>
         body {
             /* พื้นหลังแบบ Premium Dark */
@@ -42,20 +43,31 @@
             background-attachment: fixed;
             color: #e2e8f0;
         }
+
         /* ซ่อน Scrollbar */
-        .no-scrollbar::-webkit-scrollbar { display: none; }
-        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
     </style>
 </head>
+
 <body class="min-h-screen flex flex-col overflow-x-hidden">
 
-    <nav class="fixed w-full z-50 top-0 transition-all duration-300 bg-slate-900/50 backdrop-blur-xl border-b border-white/10 shadow-lg">
+    <nav
+        class="fixed w-full z-50 top-0 transition-all duration-300 bg-slate-900/50 backdrop-blur-xl border-b border-white/10 shadow-lg">
         <div class="container mx-auto px-6 py-4 flex justify-between items-center">
-            
+
             <a href="/" class="group flex items-center gap-1 relative overflow-hidden">
-                <span class="absolute top-0 -left-[100%] w-full h-full bg-gradient-to-r from-transparent via-white/30 to-transparent -skew-x-12 group-hover:left-[100%] transition-all duration-1000 ease-in-out"></span>
-                
-                <span class="text-3xl font-black tracking-tighter text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-blue-200 to-blue-500 drop-shadow-[0_0_10px_rgba(59,130,246,0.4)]">
+                <span
+                    class="absolute top-0 -left-[100%] w-full h-full bg-gradient-to-r from-transparent via-white/30 to-transparent -skew-x-12 group-hover:left-[100%] transition-all duration-1000 ease-in-out"></span>
+
+                <span
+                    class="text-3xl font-black tracking-tighter text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-blue-200 to-blue-500 drop-shadow-[0_0_10px_rgba(59,130,246,0.4)]">
                     1K
                 </span>
                 <span class="text-2xl font-bold text-slate-300 group-hover:text-white transition-colors pl-1">
@@ -69,8 +81,11 @@
 
             <div class="hidden md:flex items-center space-x-8 font-medium text-sm uppercase tracking-wider">
                 <a href="/" class="text-blue-400 border-b-2 border-blue-400 pb-1">หน้าแรก</a>
-                <a href="#" onclick="Swal.fire('Coming Soon', 'ระบบเติมเงินสุดหรู กำลังมา', 'info')" class="text-slate-400 hover:text-white transition pb-1">เติมเงิน</a>
-                
+                <a href="#" onclick="Swal.fire..." class="text-gray-500...">เติมเงิน</a>
+
+<a href="topup.html" class="text-slate-400 hover:text-white transition pb-1">เติมเงิน</a>
+                    class="text-slate-400 hover:text-white transition pb-1">เติมเงิน</a>
+
                 <div id="auth-buttons">
                     <div class="animate-pulse bg-white/10 h-10 w-32 rounded-full"></div>
                 </div>
@@ -80,28 +95,40 @@
 
     <header class="relative pt-32 pb-20 lg:pt-48 lg:pb-32 overflow-hidden">
         <div class="absolute inset-0 overflow-hidden pointer-events-none">
-            <div class="absolute -top-1/2 -right-1/2 w-[100rem] h-[100rem] bg-gradient-to-b from-blue-900/30 to-transparent rounded-full blur-3xl"></div>
-            <div class="absolute top-0 left-1/2 w-[800px] h-[800px] bg-indigo-900/20 rounded-full blur-3xl -translate-x-1/2 animate-pulse duration-[5000ms]"></div>
+            <div
+                class="absolute -top-1/2 -right-1/2 w-[100rem] h-[100rem] bg-gradient-to-b from-blue-900/30 to-transparent rounded-full blur-3xl">
+            </div>
+            <div
+                class="absolute top-0 left-1/2 w-[800px] h-[800px] bg-indigo-900/20 rounded-full blur-3xl -translate-x-1/2 animate-pulse duration-[5000ms]">
+            </div>
         </div>
-        
+
         <div class="container mx-auto px-6 relative z-10 text-center">
-            <span class="inline-block py-1 px-3 rounded-full bg-blue-500/10 text-blue-300 text-sm font-semibold mb-6 border border-blue-500/20 backdrop-blur">
+            <span
+                class="inline-block py-1 px-3 rounded-full bg-blue-500/10 text-blue-300 text-sm font-semibold mb-6 border border-blue-500/20 backdrop-blur">
                 💎 The Premium Gaming Destination
             </span>
-            <h1 class="text-5xl lg:text-7xl font-black mb-6 tracking-tight leading-tight text-transparent bg-clip-text bg-gradient-to-r from-white via-blue-100 to-slate-300 drop-shadow-sm">
-                ยกระดับ<span class="text-transparent bg-clip-text bg-gradient-to-tr from-luxury-gold to-yellow-200">ความเทพ</span><br>ในแบบที่คุณคู่ควร
+            <h1
+                class="text-5xl lg:text-7xl font-black mb-6 tracking-tight leading-tight text-transparent bg-clip-text bg-gradient-to-r from-white via-blue-100 to-slate-300 drop-shadow-sm">
+                ยกระดับ<span
+                    class="text-transparent bg-clip-text bg-gradient-to-tr from-luxury-gold to-yellow-200">ความเทพ</span><br>ในแบบที่คุณคู่ควร
             </h1>
             <p class="text-lg text-slate-300 max-w-2xl mx-auto mb-10 font-light leading-relaxed">
-                สัมผัสประสบการณ์ซื้อขายไอดีเกมระดับพรีเมียม ด้วยระบบอัตโนมัติที่รวดเร็วที่สุด ปลอดภัยที่สุด และหรูหราที่สุด
+                สัมผัสประสบการณ์ซื้อขายไอดีเกมระดับพรีเมียม ด้วยระบบอัตโนมัติที่รวดเร็วที่สุด ปลอดภัยที่สุด
+                และหรูหราที่สุด
             </p>
             <div class="flex flex-col sm:flex-row justify-center gap-4">
-                <a href="#product-section" class="group relative px-8 py-4 bg-blue-600 rounded-full overflow-hidden shadow-neon transition-all hover:scale-105">
-                    <div class="absolute inset-0 w-full h-full bg-gradient-to-r from-blue-400 to-blue-600 transition-all group-hover:scale-110"></div>
+                <a href="#product-section"
+                    class="group relative px-8 py-4 bg-blue-600 rounded-full overflow-hidden shadow-neon transition-all hover:scale-105">
+                    <div
+                        class="absolute inset-0 w-full h-full bg-gradient-to-r from-blue-400 to-blue-600 transition-all group-hover:scale-110">
+                    </div>
                     <span class="relative text-white font-bold flex items-center justify-center gap-2">
                         เลือกดูสินค้า 🛒 <span class="group-hover:translate-x-1 transition-transform">→</span>
                     </span>
                 </a>
-                <a href="#" class="px-8 py-4 rounded-full border-2 border-white/10 hover:bg-white/5 hover:border-white/30 text-white font-bold transition-all backdrop-blur-sm">
+                <a href="#"
+                    class="px-8 py-4 rounded-full border-2 border-white/10 hover:bg-white/5 hover:border-white/30 text-white font-bold transition-all backdrop-blur-sm">
                     สมัครสมาชิก
                 </a>
             </div>
@@ -120,8 +147,12 @@
         <div id="product-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
             <div class="col-span-full py-32 text-center">
                 <div class="inline-block relative w-20 h-20">
-                    <div class="absolute top-0 left-0 w-full h-full rounded-full border-4 border-white/10 border-t-blue-500 animate-spin"></div>
-                    <div class="absolute top-2 left-2 w-16 h-16 rounded-full border-4 border-white/10 border-b-luxury-gold animate-spin direction-reverse"></div>
+                    <div
+                        class="absolute top-0 left-0 w-full h-full rounded-full border-4 border-white/10 border-t-blue-500 animate-spin">
+                    </div>
+                    <div
+                        class="absolute top-2 left-2 w-16 h-16 rounded-full border-4 border-white/10 border-b-luxury-gold animate-spin direction-reverse">
+                    </div>
                 </div>
                 <p class="text-slate-400 mt-6 font-light tracking-widest uppercase">Loading Collections...</p>
             </div>
@@ -130,7 +161,8 @@
 
     <footer class="bg-slate-950/80 backdrop-blur-xl border-t border-white/5 py-12 mt-20">
         <div class="container mx-auto px-6 text-center">
-            <a href="/" class="inline-block text-3xl font-black tracking-tighter text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-blue-600 mb-4 opacity-50 hover:opacity-100 transition">
+            <a href="/"
+                class="inline-block text-3xl font-black tracking-tighter text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-blue-600 mb-4 opacity-50 hover:opacity-100 transition">
                 1K STORE
             </a>
             <div class="flex justify-center space-x-6 mb-6">
@@ -206,7 +238,7 @@
                 const container = document.getElementById('product-grid');
                 container.innerHTML = '';
 
-                if(products.length === 0) {
+                if (products.length === 0) {
                     container.innerHTML = `
                         <div class="col-span-full text-center py-20 bg-white/5 rounded-3xl border border-white/10 backdrop-blur-sm">
                             <p class="text-slate-400 text-lg tracking-wider uppercase">No Items Available Yet</p>
@@ -217,7 +249,7 @@
 
                 products.forEach((p, index) => {
                     const img = (p.images && p.images.length > 0) ? p.images[0] : 'https://via.placeholder.com/400x300?text=No+Image';
-                    
+
                     // ใช้ Stagger Animation (ค่อยๆ โผล่ทีละอัน)
                     const delay = index * 100;
 
@@ -258,7 +290,7 @@
                     `;
                 });
 
-            } catch(err) {
+            } catch (err) {
                 console.error(err);
             }
         }
@@ -290,4 +322,5 @@
         });
     </script>
 </body>
+
 </html>

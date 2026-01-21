@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>เติมเงิน | 1K Store</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600;900&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Kanit', 'sans-serif'] },
+                    colors: { luxury: { dark: '#0f172a', gold: '#fbbf24' } }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { background-color: #0f172a; color: #e2e8f0; }
+        .glass-input { background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); backdrop-filter: blur(10px); }
+        .glass-input:focus { border-color: #fbbf24; outline: none; background: rgba(255, 255, 255, 0.1); }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col items-center justify-center p-4 relative overflow-hidden">
+
+    <div class="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
+        <div class="absolute top-1/4 left-1/4 w-96 h-96 bg-blue-600/20 rounded-full blur-3xl"></div>
+        <div class="absolute bottom-1/4 right-1/4 w-96 h-96 bg-luxury-gold/10 rounded-full blur-3xl"></div>
+    </div>
+
+    <div class="relative z-10 w-full max-w-md bg-slate-900/80 backdrop-blur-xl border border-white/10 p-8 rounded-3xl shadow-2xl">
+        
+        <div class="text-center mb-8">
+            <h1 class="text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-luxury-gold to-yellow-200 mb-2">
+                เติมเงินพอยท์
+            </h1>
+            <p class="text-slate-400 text-sm">ระบบอัตโนมัติด้วยซองของขวัญ (TrueMoney)</p>
+        </div>
+
+        <div class="space-y-6">
+            <div>
+                <label class="block text-slate-300 text-sm mb-2 font-medium">ลิงก์ซองของขวัญ</label>
+                <input id="gift-link" type="text" 
+                    placeholder="https://gift.truemoney.com/campaign/?v=..." 
+                    class="glass-input w-full rounded-xl px-4 py-3 text-white placeholder-slate-500 transition-all">
+                <p class="text-xs text-slate-500 mt-2 ml-1">
+                    * สร้างซองแบบ "แบ่งจำนวนเงินเท่ากัน" เท่านั้น
+                </p>
+            </div>
+
+            <button onclick="handleTopup()" class="w-full bg-gradient-to-r from-luxury-gold to-orange-500 hover:from-yellow-400 hover:to-orange-400 text-slate-900 font-black py-4 rounded-xl shadow-lg transform transition active:scale-95">
+                ยืนยันการเติมเงิน
+            </button>
+
+            <a href="/" class="block text-center text-slate-500 hover:text-white text-sm transition mt-4">
+                ยกเลิก / กลับหน้าร้าน
+            </a>
+        </div>
+    </div>
+
+    <script>
+        async function handleTopup() {
+            const link = document.getElementById('gift-link').value.trim();
+            const userId = localStorage.getItem('user_id');
+
+            // 1. ตรวจสอบเบื้องต้น
+            if (!userId) return window.location.href = '/login.html';
+            if (!link.includes('gift.truemoney.com')) {
+                return Swal.fire({
+                    icon: 'error',
+                    title: 'ลิงก์ไม่ถูกต้อง',
+                    text: 'กรุณาใส่ลิงก์ซองของขวัญ TrueMoney ที่ถูกต้องครับ',
+                    background: '#1e293b', color: '#fff'
+                });
+            }
+
+            // 2. ส่งข้อมูล
+            try {
+                Swal.fire({
+                    title: 'กำลังตรวจสอบ...',
+                    text: 'ระบบกำลังดำเนินการ กรุณารอสักครู่',
+                    allowOutsideClick: false,
+                    didOpen: () => Swal.showLoading(),
+                    background: '#1e293b', color: '#fff'
+                });
+
+                const res = await fetch('/api/topup', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ userId, link })
+                });
+
+                const data = await res.json();
+
+                if (data.success) {
+                    await Swal.fire({
+                        icon: 'success',
+                        title: 'เติมเงินสำเร็จ!',
+                        text: `ได้รับ ${data.amount} พอยท์ เรียบร้อยแล้วครับ`,
+                        background: '#1e293b', color: '#fff',
+                        confirmButtonColor: '#fbbf24', confirmButtonText: '<span style="color:black">ตกลง</span>'
+                    });
+                    window.location.href = '/dashboard.html';
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'ไม่สำเร็จ',
+                        text: data.msg || 'เกิดข้อผิดพลาด',
+                        background: '#1e293b', color: '#fff'
+                    });
+                }
+
+            } catch (err) {
+                console.error(err);
+                Swal.fire({ icon: 'error', title: 'Error', text: 'เชื่อมต่อเซิร์ฟเวอร์ไม่ได้', background: '#1e293b', color: '#fff' });
+            }
+        }
+    </script>
+</body>
+</html>
