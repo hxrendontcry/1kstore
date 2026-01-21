@@ -1,28 +1,42 @@
 <!DOCTYPE html>
 <html lang="th">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>1K Store | แหล่งรวมไอดีเกมคุณภาพ</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600;900&display=swap" rel="stylesheet">
-    
+
     <style>
-        body { font-family: 'Kanit', sans-serif; }
+        body {
+            font-family: 'Kanit', sans-serif;
+        }
+
         /* เอฟเฟคชื่อร้านไหลไปมา */
         @keyframes gradient {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
+            0% {
+                background-position: 0% 50%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
+
+            100% {
+                background-position: 0% 50%;
+            }
         }
     </style>
 </head>
+
 <body class="bg-slate-50 text-slate-800">
 
     <nav class="bg-white shadow-md p-4 sticky top-0 z-50">
         <div class="container mx-auto flex justify-between items-center">
             <a href="/" class="text-3xl font-black tracking-tighter hover:scale-105 transition-transform duration-300">
-                <span class="bg-clip-text text-transparent bg-gradient-to-r from-blue-600 via-cyan-400 to-blue-600 bg-[length:200%_auto] animate-[gradient_3s_ease-in-out_infinite]">
+                <span
+                    class="bg-clip-text text-transparent bg-gradient-to-r from-blue-600 via-cyan-400 to-blue-600 bg-[length:200%_auto] animate-[gradient_3s_ease-in-out_infinite]">
                     1K
                 </span>
                 <span class="text-slate-700">STORE</span>
@@ -31,7 +45,8 @@
             <div class="space-x-4 font-semibold">
                 <a href="#" class="text-gray-500 hover:text-blue-600">หน้าแรก</a>
                 <a href="#" class="text-gray-500 hover:text-blue-600">เติมเงิน</a>
-                <a href="login.html" class="bg-blue-600 text-white px-5 py-2 rounded-full hover:bg-blue-700 shadow-lg shadow-blue-500/30 transition">
+                <a href="login.html"
+                    class="bg-blue-600 text-white px-5 py-2 rounded-full hover:bg-blue-700 shadow-lg shadow-blue-500/30 transition">
                     เข้าสู่ระบบ
                 </a>
             </div>
@@ -39,18 +54,95 @@
     </nav>
 
     <div class="container mx-auto mt-8 p-4">
-        <div class="bg-gradient-to-r from-blue-600 to-cyan-500 rounded-2xl p-10 text-white text-center shadow-xl relative overflow-hidden">
-            <div class="absolute top-0 left-0 w-32 h-32 bg-white opacity-10 rounded-full -translate-x-10 -translate-y-10"></div>
-            
+        <div
+            class="bg-gradient-to-r from-blue-600 to-cyan-500 rounded-2xl p-10 text-white text-center shadow-xl relative overflow-hidden">
+            <div
+                class="absolute top-0 left-0 w-32 h-32 bg-white opacity-10 rounded-full -translate-x-10 -translate-y-10">
+            </div>
+
             <h1 class="text-4xl md:text-6xl font-black mb-4 drop-shadow-md">ยินดีต้อนรับสู่ 1K STORE</h1>
             <p class="text-xl opacity-90">แหล่งซื้อขายไอดีเกมที่ปลอดภัย รวดเร็ว ระบบอัตโนมัติ 24 ชม.</p>
         </div>
     </div>
 
-    <div class="container mx-auto p-4 mt-8">
-        <h2 class="text-2xl font-bold text-blue-900 border-l-4 border-blue-500 pl-3 mb-6">สินค้ามาใหม่ 🔥</h2>
-        <p class="text-center text-gray-400 py-10">... รอเชื่อมต่อระบบหลังบ้าน ...</p>
-    </div>
+    <div class="container mx-auto p-4 mt-8 pb-20">
+        <h2 class="text-2xl font-black text-blue-900 border-l-8 border-blue-500 pl-4 mb-8">
+            สินค้าพร้อมส่ง 🚀
+        </h2>
 
+        <div id="product-grid" class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            <div class="col-span-full text-center text-gray-400 py-10 animate-pulse">
+                กำลังโหลดสินค้า...
+            </div>
+        </div>
+    </div>
+    <script>
+        async function loadProducts() {
+            try {
+                const res = await fetch('/api/get_products');
+                const products = await res.json();
+
+                const container = document.getElementById('product-grid');
+
+                if (products.length === 0) {
+                    container.innerHTML = `<div class="col-span-full text-center text-gray-500">❌ ยังไม่มีสินค้าในขณะนี้</div>`;
+                    return;
+                }
+
+                // ล้างข้อความ "กำลังโหลด" ออก
+                container.innerHTML = '';
+
+                // วนลูปสร้างการ์ดสินค้า
+                products.forEach(p => {
+                    // เอารูปแรกมาโชว์ (ถ้าไม่มีรูป ให้ใช้รูปกล่องแทน)
+                    const firstImage = (p.images && p.images.length > 0) ? p.images[0] : 'https://via.placeholder.com/300?text=No+Image';
+
+                    const html = `
+                        <div class="bg-white rounded-2xl shadow-lg overflow-hidden hover:-translate-y-2 hover:shadow-2xl transition-all duration-300 group border border-blue-50">
+                            <div class="h-48 overflow-hidden relative">
+                                <img src="${firstImage}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                                <div class="absolute top-2 right-2 bg-blue-600 text-white text-xs font-bold px-2 py-1 rounded shadow">
+                                    พร้อมส่ง
+                                </div>
+                            </div>
+                            
+                            <div class="p-5">
+                                <h3 class="font-bold text-lg text-slate-800 line-clamp-1 mb-1">${p.name}</h3>
+                                <p class="text-sm text-gray-500 line-clamp-2 h-10 mb-4">${p.description}</p>
+                                
+                                <div class="flex justify-between items-center">
+                                    <span class="text-2xl font-black text-blue-600">฿${p.price}</span>
+                                    <button onclick="buyProduct(${p.id})" class="bg-slate-800 text-white px-4 py-2 rounded-lg font-bold hover:bg-blue-600 transition shadow-lg shadow-blue-500/20">
+                                        ซื้อเลย 🛒
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    container.innerHTML += html;
+                });
+
+            } catch (err) {
+                console.error(err);
+            }
+        }
+
+        // โหลดสินค้าทันทีที่เปิดเว็บ
+        loadProducts();
+
+        // ฟังก์ชันกดซื้อ (เดี๋ยวมาทำต่อ)
+        function buyProduct(id) {
+            // เช็คว่าล็อกอินยัง?
+            const user = localStorage.getItem('username');
+            if (!user) {
+                alert('กรุณาเข้าสู่ระบบก่อนซื้อสินค้าครับ');
+                window.location.href = '/login.html';
+                return;
+            }
+            // ถ้าล็อกอินแล้ว ให้ไปหน้ายืนยัน (เดี๋ยวทำ Step หน้า)
+            alert('คุณกำลังจะซื้อสินค้า ID: ' + id + '\n(เดี๋ยวมาทำระบบตัดเงินต่อนะครับ)');
+        }
+    </script>
 </body>
+
 </html>
