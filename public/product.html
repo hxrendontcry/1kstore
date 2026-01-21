@@ -5,120 +5,208 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>รายละเอียดสินค้า | 1K Store</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600;900&display=swap" rel="stylesheet">
-    <style>body{font-family:'Kanit',sans-serif;}</style>
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Kanit', 'sans-serif'] },
+                    colors: {
+                        luxury: { dark: '#0f172a', card: '#1e293b', gold: '#fbbf24' }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { background-color: #0f172a; color: #e2e8f0; }
+        .glass-panel { background: rgba(30, 41, 59, 0.7); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.1); }
+    </style>
 </head>
-<body class="bg-slate-50 min-h-screen pb-20">
+<body class="min-h-screen flex flex-col">
 
-    <nav class="bg-white shadow-md p-4 sticky top-0 z-50">
-        <div class="container mx-auto flex justify-between items-center">
-            <a href="/" class="text-3xl font-black text-blue-600 tracking-tighter">1K <span class="text-slate-800">STORE</span></a>
-            <a href="/" class="text-gray-500 hover:text-blue-600">❮ กลับหน้าแรก</a>
+    <nav class="fixed w-full z-50 top-0 bg-slate-900/80 backdrop-blur-xl border-b border-white/10">
+        <div class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <a href="/" class="text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-blue-600 hover:opacity-80 transition">
+                ❮ กลับหน้าร้าน
+            </a>
+            <div id="user-points" class="hidden md:flex items-center gap-2 px-4 py-1 rounded-full bg-white/5 border border-white/10">
+                <span class="text-luxury-gold">🪙</span>
+                <span id="display-points" class="font-bold text-luxury-gold">...</span>
+            </div>
         </div>
     </nav>
 
-    <div class="container mx-auto mt-10 p-4 max-w-5xl">
-        <div class="bg-white rounded-2xl shadow-xl overflow-hidden min-h-[500px] grid grid-cols-1 md:grid-cols-2">
+    <main class="container mx-auto px-4 pt-28 pb-10 flex-grow">
+        <div class="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-10">
             
-            <div class="p-6 bg-slate-100 flex flex-col items-center justify-center">
-                <div class="w-full h-80 bg-white rounded-xl shadow-inner mb-4 overflow-hidden flex items-center justify-center border border-slate-200">
-                    <img id="main-img" class="max-w-full max-h-full object-contain transition-all duration-300" src="" alt="สินค้า">
+            <div class="space-y-4">
+                <div class="relative group w-full h-[400px] rounded-3xl overflow-hidden border border-white/10 shadow-2xl bg-slate-800">
+                    <img id="main-img" src="" class="w-full h-full object-contain transition-transform duration-700 group-hover:scale-105">
+                    <div class="absolute top-4 right-4">
+                        <span class="px-4 py-1 bg-green-500/20 text-green-400 border border-green-500/30 rounded-full text-sm font-bold backdrop-blur-md">
+                            ✅ พร้อมส่งทันที
+                        </span>
+                    </div>
                 </div>
-                <div id="thumb-gallery" class="flex gap-2 overflow-x-auto w-full py-2 px-1">
+                
+                <div id="thumb-gallery" class="flex gap-3 overflow-x-auto pb-2 scrollbar-hide">
                     </div>
             </div>
 
-            <div class="p-8 flex flex-col justify-between">
-                <div>
-                    <div class="flex items-center gap-2 mb-2">
-                        <span class="bg-blue-100 text-blue-600 text-xs font-bold px-2 py-1 rounded-full">พร้อมส่งทันที</span>
-                        <span class="text-gray-400 text-xs" id="p-id">ID: Loading...</span>
-                    </div>
+            <div class="glass-panel p-8 rounded-3xl relative overflow-hidden">
+                <div class="absolute top-0 right-0 w-64 h-64 bg-blue-500/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 pointer-events-none"></div>
+
+                <div class="relative z-10">
+                    <div class="text-slate-400 text-sm font-mono mb-2 tracking-widest uppercase">Product ID: <span id="p-id">...</span></div>
                     
-                    <h1 id="p-name" class="text-3xl font-black text-slate-800 mb-4 leading-tight">กำลังโหลดข้อมูล...</h1>
+                    <h1 id="p-name" class="text-3xl md:text-4xl font-black text-white mb-6 leading-tight">กำลังโหลด...</h1>
                     
-                    <div class="text-4xl font-black text-blue-600 mb-6">
-                        ฿<span id="p-price">0</span>
+                    <div class="flex items-end gap-2 mb-8 pb-8 border-b border-white/10">
+                        <span class="text-lg text-slate-400 mb-1">ราคา</span>
+                        <span class="text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-luxury-gold to-yellow-200">
+                            ฿<span id="p-price">0</span>
+                        </span>
                     </div>
 
-                    <p class="font-bold text-gray-700 mb-2">รายละเอียด:</p>
-                    <div id="p-desc" class="text-gray-600 bg-slate-50 p-4 rounded-lg border border-slate-100 h-32 overflow-y-auto mb-6">
-                        ...
+                    <div class="mb-8">
+                        <h3 class="text-white font-bold mb-3 flex items-center gap-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-blue-400" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd" /></svg>
+                            รายละเอียดสินค้า
+                        </h3>
+                        <div id="p-desc" class="text-slate-300 bg-slate-950/30 p-4 rounded-xl border border-white/5 h-40 overflow-y-auto leading-relaxed font-light">
+                            ...
+                        </div>
                     </div>
-                </div>
 
-                <div>
-                    <button onclick="buyNow()" class="w-full bg-blue-600 hover:bg-blue-700 text-white text-xl font-bold py-4 rounded-xl shadow-lg shadow-blue-500/30 transition transform active:scale-95 flex items-center justify-center gap-2">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
-                        </svg>
-                        สั่งซื้อสินค้านี้
+                    <button onclick="buyNow()" class="w-full group relative overflow-hidden bg-blue-600 hover:bg-blue-500 text-white font-bold py-4 rounded-2xl shadow-[0_0_20px_rgba(37,99,235,0.3)] transition-all transform active:scale-95">
+                        <div class="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:animate-[shimmer_1.5s_infinite]"></div>
+                        <span class="relative flex items-center justify-center gap-2 text-xl">
+                            🛒 สั่งซื้อสินค้าทันที
+                        </span>
                     </button>
-                    <p class="text-center text-xs text-gray-400 mt-3">ระบบจัดส่งอัตโนมัติภายใน 1 นาที</p>
+                    <p class="text-center text-xs text-slate-500 mt-4">
+                        🛡️ รับประกันสินค้าปลอดภัย • จัดส่งอัตโนมัติใน 1 วินาที
+                    </p>
                 </div>
             </div>
         </div>
-    </div>
+    </main>
 
     <script>
-        // ดึง ID จาก URL (เช่น product.html?id=123)
         const params = new URLSearchParams(window.location.search);
         const productId = params.get('id');
+        let currentProduct = null;
+
+        // อัปเดตพอยท์มุมบน
+        const myPoints = localStorage.getItem('points') || 0;
+        document.getElementById('display-points').innerText = parseFloat(myPoints).toLocaleString();
 
         async function loadData() {
-            if(!productId) return alert("ไม่พบสินค้านี้");
+            if(!productId) return window.location.href = '/';
 
             try {
                 const res = await fetch(`/api/get_product_detail?id=${productId}`);
                 const product = await res.json();
 
-                if(product.error) return alert("สินค้าหมด หรือ ถูกลบไปแล้ว");
+                if(product.error) {
+                    await Swal.fire('ขออภัย', 'สินค้านี้หมด หรือถูกลบไปแล้ว', 'error');
+                    return window.location.href = '/';
+                }
 
-                // ใส่ข้อมูลลงหน้าเว็บ
-                document.getElementById('p-id').innerText = `ID: #${product.id}`;
+                currentProduct = product;
+                
+                // ใส่ข้อมูล
+                document.getElementById('p-id').innerText = product.id;
                 document.getElementById('p-name').innerText = product.name;
-                document.getElementById('p-price').innerText = product.price;
-                document.getElementById('p-desc').innerText = product.description;
+                document.getElementById('p-price').innerText = parseFloat(product.price).toLocaleString();
+                document.getElementById('p-desc').innerText = product.description || "ไม่มีรายละเอียดเพิ่มเติม";
 
-                // จัดการรูปภาพ (Gallery)
-                const images = product.images && product.images.length > 0 ? product.images : ['https://via.placeholder.com/500?text=No+Image'];
-                
-                // รูปหลัก
-                const mainImg = document.getElementById('main-img');
-                mainImg.src = images[0];
+                // รูปภาพ
+                const images = product.images && product.images.length > 0 ? product.images : ['https://via.placeholder.com/500/1e293b/FFFFFF?text=No+Image'];
+                document.getElementById('main-img').src = images[0];
 
-                // สร้างรูปเล็กด้านล่าง
                 const thumbContainer = document.getElementById('thumb-gallery');
-                thumbContainer.innerHTML = '';
-                
-                images.forEach((img, index) => {
+                images.forEach(img => {
                     thumbContainer.innerHTML += `
-                        <img src="${img}" onclick="changeImage('${img}')" 
-                        class="w-20 h-20 object-cover rounded-lg border-2 border-transparent hover:border-blue-500 cursor-pointer transition shadow-sm bg-white">
+                        <img src="${img}" onclick="document.getElementById('main-img').src='${img}'" 
+                        class="w-20 h-20 object-cover rounded-xl border-2 border-transparent hover:border-blue-500 cursor-pointer transition bg-slate-800">
                     `;
                 });
 
-            } catch(err) {
-                console.error(err);
+            } catch(err) { console.error(err); }
+        }
+
+        async function buyNow() {
+            // 1. เช็ค Login
+            const userId = localStorage.getItem('user_id');
+            if(!userId) {
+                return Swal.fire({
+                    icon: 'warning',
+                    title: 'กรุณาเข้าสู่ระบบ',
+                    text: 'ต้องล็อกอินก่อนซื้อสินค้านะครับ',
+                    confirmButtonText: 'ไปหน้าล็อกอิน',
+                    confirmButtonColor: '#3b82f6'
+                }).then((res) => {
+                    if(res.isConfirmed) window.location.href = '/login.html';
+                });
             }
-        }
 
-        // ฟังก์ชันเปลี่ยนรูปหลัก เมื่อกดรูปเล็ก
-        function changeImage(src) {
-            document.getElementById('main-img').src = src;
-        }
+            // 2. ถามยืนยัน
+            const confirm = await Swal.fire({
+                title: 'ยืนยันการสั่งซื้อ?',
+                html: `คุณต้องการซื้อ <b>${currentProduct.name}</b><br>ในราคา <b style="color:#fbbf24">${currentProduct.price} บาท</b> ใช่ไหม?`,
+                icon: 'question',
+                background: '#1e293b', color: '#fff',
+                showCancelButton: true,
+                confirmButtonText: 'ใช่, ซื้อเลย!',
+                cancelButtonText: 'ยกเลิก',
+                confirmButtonColor: '#3b82f6',
+                cancelButtonColor: '#ef4444'
+            });
 
-        // ฟังก์ชันปุ่มซื้อ (เดี๋ยวทำหน้าถัดไป)
-        function buyNow() {
-            const user = localStorage.getItem('username');
-            if(!user) {
-                alert('กรุณาเข้าสู่ระบบก่อนนะครับ');
-                window.location.href = '/login.html';
-            } else {
-                if(confirm('ยืนยันที่จะซื้อสินค้านี้?')) {
-                    // เรียก API ซื้อของ (Step ต่อไป)
-                    alert('ส่งคำสั่งซื้อแล้ว... (เดี๋ยวมาทำระบบตัดเงิน)');
+            if(!confirm.isConfirmed) return;
+
+            // 3. ส่งคำสั่งซื้อ
+            try {
+                Swal.fire({ title: 'กำลังทำรายการ...', didOpen: () => Swal.showLoading(), background: '#1e293b', color: '#fff' });
+
+                const res = await fetch('/api/buy_product', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({ userId: userId, productId: productId })
+                });
+                const data = await res.json();
+
+                if(data.success) {
+                    // อัปเดตพอยท์ในเครื่อง
+                    localStorage.setItem('points', data.newPoints);
+                    
+                    // แสดงของรางวัล (User/Pass)
+                    await Swal.fire({
+                        icon: 'success',
+                        title: 'ซื้อสำเร็จ! 🎉',
+                        html: `
+                            <div class="bg-slate-800 p-4 rounded-lg mt-2 border border-slate-700">
+                                <p class="text-gray-400 text-sm mb-1">ข้อมูลสินค้าของคุณ:</p>
+                                <code class="text-green-400 text-lg font-mono select-all block break-all">${data.stock}</code>
+                                <p class="text-xs text-gray-500 mt-2">(บันทึกหน้าจอนี้ไว้นะครับ)</p>
+                            </div>
+                        `,
+                        background: '#1e293b', color: '#fff',
+                        confirmButtonText: 'ตกลง',
+                        confirmButtonColor: '#10b981'
+                    });
+                    
+                    window.location.href = '/'; // กลับหน้าแรก
+                } else {
+                    Swal.fire({ icon: 'error', title: 'ไม่สำเร็จ', text: data.msg, background: '#1e293b', color: '#fff' });
                 }
+
+            } catch(err) {
+                Swal.fire({ icon: 'error', title: 'Error', text: 'เกิดข้อผิดพลาดในการเชื่อมต่อ', background: '#1e293b', color: '#fff' });
             }
         }
 
