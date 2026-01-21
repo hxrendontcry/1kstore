@@ -154,10 +154,10 @@
             if (username) {
                 container.innerHTML = `
                     <div class="flex items-center gap-4 bg-white/5 pl-4 pr-2 py-1.5 rounded-full border border-white/10 backdrop-blur-lg shadow-sm">
-                        <div class="text-right hidden lg:block">
-                            <div class="font-bold text-white leading-tight">${username}</div>
-                            <div class="text-[10px] text-blue-300 uppercase tracking-wider">Member</div>
-                        </div>
+                       <a href="dashboard.html" class="text-right hidden lg:block hover:opacity-80 transition cursor-pointer">
+    <div class="font-bold text-white leading-tight">${username}</div>
+    <div class="text-[10px] text-blue-300 uppercase tracking-wider">Member • View Profile</div>
+</a>
                         <div class="flex items-center gap-1 px-3 py-1 bg-gradient-to-r from-luxury-gold/20 to-transparent rounded-full border border-luxury-gold/30">
                             <span class="text-luxury-gold text-sm">🪙</span>
                             <span class="font-bold text-luxury-gold">${parseFloat(points).toLocaleString()}</span>

@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ประวัติการใช้งาน | 1K Store</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600;900&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Kanit', 'sans-serif'] },
+                    colors: { luxury: { dark: '#0f172a', gold: '#fbbf24' } }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { background-color: #0f172a; color: #e2e8f0; }
+        .glass-card { background: rgba(30, 41, 59, 0.6); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.05); }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col">
+
+    <nav class="fixed w-full z-50 top-0 bg-slate-900/90 backdrop-blur-xl border-b border-white/10">
+        <div class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <a href="/" class="text-xl font-bold text-slate-300 hover:text-white transition flex items-center gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" /></svg>
+                กลับหน้าร้าน
+            </a>
+            <div class="font-bold text-luxury-gold">MEMBER DASHBOARD</div>
+        </div>
+    </nav>
+
+    <main class="container mx-auto px-4 pt-24 pb-10 max-w-4xl">
+        
+        <div class="glass-card rounded-3xl p-8 mb-8 flex flex-col md:flex-row items-center justify-between gap-6 shadow-2xl relative overflow-hidden">
+            <div class="absolute top-0 right-0 w-64 h-64 bg-blue-600/20 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2"></div>
+            
+            <div class="flex items-center gap-4 relative z-10">
+                <div class="w-20 h-20 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center text-3xl shadow-lg border-4 border-slate-800">
+                    👤
+                </div>
+                <div>
+                    <h1 id="u-name" class="text-3xl font-black text-white">Loading...</h1>
+                    <p class="text-slate-400 text-sm tracking-wider uppercase">VIP Member</p>
+                </div>
+            </div>
+
+            <div class="text-center md:text-right relative z-10 bg-slate-900/50 p-4 rounded-2xl border border-white/5">
+                <p class="text-slate-400 text-xs uppercase mb-1">ยอดเงินคงเหลือ</p>
+                <div class="text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-luxury-gold to-yellow-200">
+                    ฿<span id="u-points">0</span>
+                </div>
+            </div>
+        </div>
+
+        <h2 class="text-2xl font-bold text-white mb-6 flex items-center gap-2">
+            <span class="text-blue-500">📜</span> ประวัติการทำรายการล่าสุด
+        </h2>
+
+        <div class="glass-card rounded-2xl overflow-hidden min-h-[400px]">
+            <div class="overflow-x-auto">
+                <table class="w-full text-left">
+                    <thead class="bg-slate-900/50 text-slate-400 uppercase text-xs tracking-wider border-b border-white/10">
+                        <tr>
+                            <th class="p-4 font-medium">วันที่ / เวลา</th>
+                            <th class="p-4 font-medium">รายการ</th>
+                            <th class="p-4 font-medium text-right">จำนวนเงิน</th>
+                            <th class="p-4 font-medium text-center">สถานะ</th>
+                        </tr>
+                    </thead>
+                    <tbody id="history-list" class="divide-y divide-white/5 text-sm">
+                        <tr><td colspan="4" class="p-8 text-center text-slate-500">กำลังโหลดข้อมูล...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </main>
+
+    <script>
+        // เช็ค Login ก่อน
+        const userId = localStorage.getItem('user_id');
+        const username = localStorage.getItem('username');
+        const points = localStorage.getItem('points');
+
+        if(!userId) window.location.href = '/login.html';
+
+        // ใส่ข้อมูลเบื้องต้น
+        document.getElementById('u-name').innerText = username;
+        document.getElementById('u-points').innerText = parseFloat(points).toLocaleString();
+
+        async function loadHistory() {
+            try {
+                const res = await fetch(`/api/get_history?userId=${userId}`);
+                const data = await res.json();
+                
+                const tbody = document.getElementById('history-list');
+                tbody.innerHTML = '';
+
+                if(data.history.length === 0) {
+                    tbody.innerHTML = `<tr><td colspan="4" class="p-10 text-center text-slate-500">ยังไม่มีรายการประวัติครับ</td></tr>`;
+                    return;
+                }
+
+                data.history.forEach(item => {
+                    const date = new Date(item.created_at).toLocaleString('th-TH');
+                    
+                    // แยกประเภทรายการ (ซื้อของ vs เติมเงิน)
+                    let title, amountClass, icon, statusHtml;
+                    
+                    if(item.type === 'buy_product') {
+                        // ซื้อของ
+                        title = `<span class="text-white font-bold">${item.detail}</span>`;
+                        amountClass = "text-red-400"; // สีแดง (เงินออก)
+                        icon = "-";
+                        statusHtml = `<span class="px-2 py-1 rounded bg-green-500/10 text-green-400 border border-green-500/20 text-xs">สำเร็จ</span>`;
+                    } else {
+                        // เติมเงิน
+                        title = `เติมเงิน (${item.detail || 'TrueMoney'})`;
+                        amountClass = "text-green-400"; // สีเขียว (เงินเข้า)
+                        icon = "+";
+                        statusHtml = `<span class="px-2 py-1 rounded bg-blue-500/10 text-blue-400 border border-blue-500/20 text-xs">เติมเงิน</span>`;
+                    }
+
+                    // เพิ่มปุ่ม "ดูของ" ถ้าเป็นรายการซื้อ
+                    let viewBtn = "";
+                    /* ในเวอร์ชั่นจริงต้อง Join table เพื่อเอา User/Pass มาโชว์
+                       แต่ตอนนี้เราโชว์แค่ Log ไปก่อน */
+
+                    tbody.innerHTML += `
+                        <tr class="hover:bg-white/5 transition">
+                            <td class="p-4 text-slate-400">${date}</td>
+                            <td class="p-4">${title}</td>
+                            <td class="p-4 text-right font-bold ${amountClass}">${icon}฿${item.amount}</td>
+                            <td class="p-4 text-center">${statusHtml}</td>
+                        </tr>
+                    `;
+                });
+
+            } catch(err) {
+                console.error(err);
+            }
+        }
+
+        loadHistory();
+    </script>
+</body>
+</html>
