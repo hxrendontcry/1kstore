@@ -3,22 +3,28 @@ import { createClient } from '@supabase/supabase-js'
 const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_KEY)
 
 export default async function handler(req, res) {
-    const { action, id, name, description, price, image, stock_content, userId } = req.body;
+    const { action, id, name, description, price, images, stock_content, userId } = req.body;
 
     try {
-        // 1. ตรวจสอบก่อนว่าคนสั่ง เป็น Admin จริงไหม? (ความปลอดภัย)
+        // 1. ตรวจสอบสิทธิ์ Admin
         const { data: user } = await supabase.from('users').select('role').eq('id', userId).single();
         if (!user || user.role !== 'admin') {
-            return res.status(403).json({ success: false, msg: "คุณไม่มีสิทธิ์เข้าถึงส่วนนี้ (Admin Only)" });
+            return res.status(403).json({ success: false, msg: "Access Denied: Admin Only" });
         }
 
-        // 2. แยกการทำงานตามคำสั่ง (Action)
-        
-        // --- เพิ่มสินค้า (ADD) ---
+        // 2. แปลงรูปภาพให้เป็น Array เสมอ (ป้องกัน Error)
+        let imageArray = [];
+        if (Array.isArray(images)) {
+            imageArray = images;
+        } else if (typeof images === 'string') {
+            imageArray = [images];
+        }
+
+        // 3. ทำงานตามคำสั่ง
         if (action === 'add') {
             const { error } = await supabase.from('products').insert({
                 name, description, price, 
-                images: [image], // เก็บเป็น Array
+                images: imageArray, // บันทึกหลายรูป
                 stock_content,
                 is_sold: false
             });
@@ -26,28 +32,26 @@ export default async function handler(req, res) {
             return res.json({ success: true, msg: "เพิ่มสินค้าเรียบร้อย" });
         }
 
-        // --- ลบสินค้า (DELETE) ---
         else if (action === 'delete') {
             const { error } = await supabase.from('products').delete().eq('id', id);
             if (error) throw error;
             return res.json({ success: true, msg: "ลบสินค้าเรียบร้อย" });
         }
 
-        // --- แก้ไขสินค้า (EDIT) ---
         else if (action === 'edit') {
             const { error } = await supabase.from('products').update({
                 name, description, price, 
-                images: [image],
+                images: imageArray, // บันทึกหลายรูป
                 stock_content
             }).eq('id', id);
             if (error) throw error;
             return res.json({ success: true, msg: "แก้ไขข้อมูลเรียบร้อย" });
         }
 
-        return res.status(400).json({ success: false, msg: "ไม่พบคำสั่งที่ต้องการ" });
+        return res.status(400).json({ success: false, msg: "Unknown Action" });
 
     } catch (e) {
         console.error(e);
-        return res.status(500).json({ success: false, msg: "Server Error: " + e.message });
+        return res.status(500).json({ success: false, msg: e.message });
     }
 }

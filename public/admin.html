@@ -23,12 +23,19 @@
         
         <div class="lg:col-span-1 bg-slate-800 p-6 rounded-xl border border-white/10 h-fit sticky top-6">
             <h2 id="form-title" class="text-xl font-bold text-yellow-400 mb-4">✨ เพิ่มสินค้าใหม่</h2>
-            <input type="hidden" id="p-id"> <div class="space-y-4">
+            <input type="hidden" id="p-id">
+            
+            <div class="space-y-4">
                 <input id="p-name" type="text" placeholder="ชื่อสินค้า" class="w-full bg-slate-900 border border-slate-700 rounded p-3 text-white">
                 <textarea id="p-desc" placeholder="รายละเอียด" class="w-full bg-slate-900 border border-slate-700 rounded p-3 text-white h-24"></textarea>
                 <input id="p-price" type="number" placeholder="ราคา (บาท)" class="w-full bg-slate-900 border border-slate-700 rounded p-3 text-white">
-                <input id="p-image" type="text" placeholder="ลิงก์รูปภาพ (URL)" class="w-full bg-slate-900 border border-slate-700 rounded p-3 text-white">
-                <textarea id="p-stock" placeholder="ข้อมูลลับ (ID/Pass) ที่จะส่งให้ลูกค้า" class="w-full bg-slate-900 border border-slate-700 rounded p-3 text-white h-24 font-mono text-sm text-yellow-200"></textarea>
+                
+                <div>
+                    <textarea id="p-images" placeholder="ลิงก์รูปภาพ (1 บรรทัด ต่อ 1 รูป)&#10;เช่น:&#10;https://img1.com/cover.jpg&#10;https://img2.com/detail.jpg" class="w-full bg-slate-900 border border-slate-700 rounded p-3 text-white h-32 font-mono text-sm leading-relaxed"></textarea>
+                    <p class="text-xs text-slate-500 mt-1">* รูปบรรทัดแรกจะเป็นรูปปก (Cover)</p>
+                </div>
+
+                <textarea id="p-stock" placeholder="ข้อมูลลับ (ID/Pass) ส่งให้ลูกค้าหลังซื้อ" class="w-full bg-slate-900 border border-slate-700 rounded p-3 text-white h-24 font-mono text-sm text-yellow-200"></textarea>
                 
                 <button onclick="saveProduct()" id="btn-save" class="w-full bg-green-600 hover:bg-green-500 text-white font-bold py-3 rounded transition">
                     บันทึกสินค้า
@@ -60,14 +67,13 @@
     <script>
         const userId = localStorage.getItem('user_id');
 
-        // 1. เช็คสิทธิ์และโหลดข้อมูล
         async function init() {
             if(!userId) return window.location.href = '/login.html';
             loadProducts();
         }
 
         async function loadProducts() {
-            const res = await fetch('/api/get_products'); // ใช้ API เดิมดึงข้อมูล
+            const res = await fetch('/api/get_products');
             const products = await res.json();
             const list = document.getElementById('product-list');
             list.innerHTML = '';
@@ -77,14 +83,16 @@
                     ? '<span class="px-2 py-1 bg-red-500/20 text-red-400 text-xs rounded">ขายแล้ว</span>' 
                     : '<span class="px-2 py-1 bg-green-500/20 text-green-400 text-xs rounded">พร้อมขาย</span>';
                 
-                // แปลงข้อมูลเป็น JSON string เพื่อส่งไปฟังก์ชัน edit (ต้อง escape ให้ดี)
                 const dataStr = encodeURIComponent(JSON.stringify(p));
 
                 list.innerHTML += `
                     <tr class="hover:bg-slate-700/50 transition">
-                        <td class="p-4">
-                            <div class="font-bold text-white">${p.name}</div>
-                            <div class="text-xs text-slate-500 truncate w-48">${p.stock_content}</div>
+                        <td class="p-4 flex gap-3 items-center">
+                            <img src="${p.images && p.images.length ? p.images[0] : ''}" class="w-10 h-10 rounded object-cover bg-slate-900">
+                            <div>
+                                <div class="font-bold text-white">${p.name}</div>
+                                <div class="text-xs text-slate-500 truncate w-48 font-mono">${p.stock_content}</div>
+                            </div>
                         </td>
                         <td class="p-4 text-right font-mono text-yellow-400">${p.price}.-</td>
                         <td class="p-4 text-center">${status}</td>
@@ -97,25 +105,24 @@
             });
         }
 
-        // 2. ฟังก์ชันบันทึก (เพิ่ม หรือ แก้ไข)
         async function saveProduct() {
             const id = document.getElementById('p-id').value;
-            const action = id ? 'edit' : 'add'; // ถ้ามี ID แปลว่ากำลังแก้ไข
+            const action = id ? 'edit' : 'add';
+
+            // แยกบรรทัดรูปภาพ
+            const rawImages = document.getElementById('p-images').value;
+            const images = rawImages.split('\n').map(u => u.trim()).filter(u => u !== '');
 
             const payload = {
-                userId,
-                action,
-                id,
+                userId, action, id,
                 name: document.getElementById('p-name').value,
                 description: document.getElementById('p-desc').value,
                 price: document.getElementById('p-price').value,
-                image: document.getElementById('p-image').value,
+                images: images, // ส่งเป็น Array
                 stock_content: document.getElementById('p-stock').value
             };
 
-            if(!payload.name || !payload.price || !payload.stock_content) {
-                return Swal.fire({icon:'warning', title:'กรอกข้อมูลไม่ครบ', background:'#1e293b', color:'#fff'});
-            }
+            if(!payload.name || !payload.price || !payload.stock_content) return Swal.fire({icon:'warning', title:'กรอกข้อมูลไม่ครบ', background:'#1e293b', color:'#fff'});
 
             Swal.showLoading();
             const res = await fetch('/api/admin_products', {
@@ -134,20 +141,10 @@
             }
         }
 
-        // 3. ฟังก์ชันลบ
         async function deleteProduct(id) {
-            const confirm = await Swal.fire({
-                title: 'ลบสินค้า?',
-                text: "ลบแล้วกู้คืนไม่ได้นะครับ",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#d33',
-                confirmButtonText: 'ลบเลย',
-                background:'#1e293b', color:'#fff'
-            });
-
+            const confirm = await Swal.fire({ title: 'ลบสินค้า?', text: "ลบแล้วกู้คืนไม่ได้", icon: 'warning', showCancelButton: true, confirmButtonColor: '#d33', background:'#1e293b', color:'#fff' });
             if (confirm.isConfirmed) {
-                const res = await fetch('/api/admin_products', {
+                await fetch('/api/admin_products', {
                     method: 'POST',
                     headers: {'Content-Type': 'application/json'},
                     body: JSON.stringify({ userId, action: 'delete', id })
@@ -156,11 +153,10 @@
             }
         }
 
-        // 4. เริ่มแก้ไข (ดึงข้อมูลมาใส่ฟอร์ม)
         function startEdit(encodedData) {
             const p = JSON.parse(decodeURIComponent(encodedData));
             
-            document.getElementById('form-title').innerText = '✏️ แก้ไขสินค้า: ' + p.name;
+            document.getElementById('form-title').innerText = '✏️ แก้ไขสินค้า';
             document.getElementById('btn-save').innerText = 'บันทึกการแก้ไข';
             document.getElementById('btn-save').classList.replace('bg-green-600', 'bg-blue-600');
             document.getElementById('btn-save').classList.replace('hover:bg-green-500', 'hover:bg-blue-500');
@@ -170,20 +166,24 @@
             document.getElementById('p-name').value = p.name;
             document.getElementById('p-desc').value = p.description;
             document.getElementById('p-price').value = p.price;
-            document.getElementById('p-image').value = (p.images && p.images.length) ? p.images[0] : '';
             document.getElementById('p-stock').value = p.stock_content;
+            
+            // รวม Array กลับเป็นบรรทัด
+            if (p.images && Array.isArray(p.images)) {
+                document.getElementById('p-images').value = p.images.join('\n');
+            } else {
+                document.getElementById('p-images').value = '';
+            }
             
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        // 5. ล้างฟอร์ม
         function resetForm() {
             document.getElementById('form-title').innerText = '✨ เพิ่มสินค้าใหม่';
             document.getElementById('btn-save').innerText = 'บันทึกสินค้า';
             document.getElementById('btn-save').classList.replace('bg-blue-600', 'bg-green-600');
             document.getElementById('btn-save').classList.replace('hover:bg-blue-500', 'hover:bg-green-500');
             document.getElementById('btn-cancel').classList.add('hidden');
-            
             document.getElementById('p-id').value = '';
             document.querySelectorAll('input, textarea').forEach(i => i.value = '');
         }
