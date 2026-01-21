@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>เข้าสู่ระบบ | 1K Store</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>body{font-family:'Kanit',sans-serif;}</style>
+</head>
+<body class="bg-slate-50 min-h-screen flex items-center justify-center p-4">
+
+    <div class="bg-white p-8 rounded-2xl shadow-xl w-full max-w-md border border-blue-100">
+        <div class="text-center mb-8">
+            <h1 class="text-4xl font-black text-blue-600 tracking-tighter">1K <span class="text-slate-800">STORE</span></h1>
+            <p class="text-gray-400 mt-2">เข้าสู่ระบบเพื่อเริ่มต้นซื้อสินค้า</p>
+        </div>
+
+        <div class="space-y-4">
+            <div>
+                <label class="block text-gray-600 mb-1">ชื่อผู้ใช้</label>
+                <input id="username" type="text" class="w-full bg-slate-50 border border-slate-200 rounded-lg p-3 focus:outline-none focus:border-blue-500 transition" placeholder="กรอกชื่อผู้ใช้">
+            </div>
+            <div>
+                <label class="block text-gray-600 mb-1">รหัสผ่าน</label>
+                <input id="password" type="password" class="w-full bg-slate-50 border border-slate-200 rounded-lg p-3 focus:outline-none focus:border-blue-500 transition" placeholder="กรอกรหัสผ่าน">
+            </div>
+
+            <button onclick="login()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-xl shadow-lg shadow-blue-500/30 transition transform active:scale-95">
+                เข้าสู่ระบบ
+            </button>
+
+            <button onclick="register()" class="w-full bg-white border border-blue-200 text-blue-600 hover:bg-blue-50 font-bold py-3 rounded-xl transition">
+                สมัครสมาชิกใหม่
+            </button>
+        </div>
+
+        <div id="status" class="mt-4 text-center text-sm font-bold"></div>
+    </div>
+
+    <script>
+        async function login() {
+            const user = document.getElementById('username').value;
+            const pass = document.getElementById('password').value;
+            const status = document.getElementById('status');
+
+            if(!user || !pass) return alert("กรุณากรอกข้อมูลให้ครบ");
+
+            status.innerHTML = '<span class="text-blue-500">กำลังตรวจสอบ...</span>';
+
+            try {
+                const res = await fetch('/api/login', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({ username: user, password: pass })
+                });
+                const data = await res.json();
+
+                if (data.success) {
+                    status.innerHTML = '<span class="text-green-500">เข้าสู่ระบบสำเร็จ!</span>';
+                    // บันทึกข้อมูล User ลงเครื่อง
+                    localStorage.setItem('user_id', data.user.id);
+                    localStorage.setItem('username', data.user.username);
+                    localStorage.setItem('points', data.user.points);
+                    localStorage.setItem('role', data.user.role);
+                    
+                    // ไปหน้าแรก
+                    setTimeout(() => window.location.href = '/', 1000);
+                } else {
+                    status.innerHTML = `<span class="text-red-500">${data.msg}</span>`;
+                }
+            } catch (err) {
+                status.innerHTML = '<span class="text-red-500">ระบบขัดข้อง โปรดลองใหม่</span>';
+            }
+        }
+
+        async function register() {
+            const user = document.getElementById('username').value;
+            const pass = document.getElementById('password').value;
+            
+            if(!user || !pass) return alert("กรุณากรอกชื่อและรหัสผ่านที่ต้องการสมัคร");
+            
+            if(!confirm(`ยืนยันจะสมัครสมาชิกด้วยชื่อ "${user}" ใช่ไหม?`)) return;
+
+            const res = await fetch('/api/register', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({ username: user, password: pass })
+            });
+            const data = await res.json();
+            
+            if(data.success) {
+                alert("สมัครสมาชิกเรียบร้อย! กดเข้าสู่ระบบได้เลย");
+            } else {
+                alert(data.msg);
+            }
+        }
+    </script>
+</body>
+</html>
