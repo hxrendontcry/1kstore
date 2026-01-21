@@ -3,39 +3,37 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>1K Store | The Premium Gaming Marketplace</title>
+    <title>1K STORE | Mobile Legends Market</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
-    
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    
-    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600;800;900&display=swap" rel="stylesheet">
     
     <script>
-        // ตั้งค่า Tailwind colors เพิ่มเติม
         tailwind.config = {
             theme: {
                 extend: {
                     fontFamily: { sans: ['Kanit', 'sans-serif'] },
                     colors: {
-                        luxury: {
-                            dark: '#0f172a',
-                            card: '#1e293b',
-                            gold: '#fbbf24',
-                            blueaccent: '#3b82f6'
+                        mlbb: {
+                            bg: '#090b19', // พื้นหลังมืดแบบ MLBB
+                            card: '#131629',
+                            gold: '#dfb664', // สีทอง Victory
+                            purple: '#6c5ce7', // สีม่วง Mythic
+                            blue: '#00a8ff'
                         }
                     },
                     boxShadow: {
-                        'neon': '0 0 20px rgba(59, 130, 246, 0.5)',
-                        'gold-glow': '0 0 15px rgba(251, 191, 36, 0.3)'
+                        'mythic': '0 0 20px rgba(108, 92, 231, 0.4)',
+                        'victory': '0 0 15px rgba(223, 182, 100, 0.3)'
                     },
                     animation: {
-                        'shimmer': 'shimmer 2s linear infinite',
+                        'float': 'float 3s ease-in-out infinite',
                     },
                     keyframes: {
-                        shimmer: {
-                            '0%': { backgroundPosition: '200% 0' },
-                            '100%': { backgroundPosition: '-200% 0' }
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-10px)' },
                         }
                     }
                 }
@@ -45,201 +43,186 @@
     
     <style>
         body {
-            background-color: #0f172a;
-            background-image: radial-gradient(at 50% 0%, #1e3a8a 0, transparent 50%), radial-gradient(at 0% 0%, #312e81 0, transparent 50%);
-            background-attachment: fixed;
+            background-color: #090b19;
+            /* พื้นหลังสไตล์ Galaxy/Magic */
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(108, 92, 231, 0.2) 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(0, 168, 255, 0.15) 0%, transparent 40%);
             color: #e2e8f0;
         }
-        .no-scrollbar::-webkit-scrollbar { display: none; }
-        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
         
-        /* Animation สำหรับ Product Card */
-        @keyframes fadeUp {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
+        /* เอฟเฟกต์แสงสะท้อนบนกระจก */
+        .glass-moba {
+            background: rgba(19, 22, 41, 0.7);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
         }
+
+        .text-glow { text-shadow: 0 0 10px rgba(223, 182, 100, 0.5); }
+        .clip-path-slant { clip-path: polygon(0 0, 100% 0, 95% 100%, 5% 100%); }
     </style>
 </head>
 <body class="min-h-screen flex flex-col overflow-x-hidden">
 
-    <nav class="fixed w-full z-50 top-0 transition-all duration-300 bg-slate-900/50 backdrop-blur-xl border-b border-white/10 shadow-lg">
+    <nav class="fixed w-full z-50 top-0 transition-all duration-300 bg-[#090b19]/80 backdrop-blur-md border-b border-white/5">
         <div class="container mx-auto px-6 py-4 flex justify-between items-center">
-            
-            <a href="/" class="group flex items-center gap-1 relative overflow-hidden">
-                <span class="text-3xl font-black tracking-tighter text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-blue-200 to-blue-500 drop-shadow-[0_0_10px_rgba(59,130,246,0.4)]">
-                    1K
-                </span>
-                <span class="text-2xl font-bold text-slate-300 group-hover:text-white transition-colors pl-1">
-                    STORE
-                </span>
+            <a href="/" class="flex items-center gap-2 group">
+                <div class="w-10 h-10 bg-gradient-to-tr from-mlbb-purple to-mlbb-blue rounded-lg flex items-center justify-center transform group-hover:rotate-12 transition">
+                    <span class="text-xl">⚔️</span>
+                </div>
+                <div class="flex flex-col">
+                    <span class="text-xl font-black tracking-tighter text-white leading-none">1K STORE</span>
+                    <span class="text-[10px] text-mlbb-gold tracking-widest uppercase font-bold">Mobile Legends</span>
+                </div>
             </a>
 
-            <div class="hidden md:flex items-center space-x-8 font-medium text-sm uppercase tracking-wider">
-                <a href="/" class="text-blue-400 border-b-2 border-blue-400 pb-1">หน้าแรก</a>
-                <a href="topup.html" class="text-slate-400 hover:text-white transition pb-1">เติมเงิน</a>
-                <a href="#" class="text-slate-400 hover:text-white transition pb-1">ติดต่อเรา</a>
-                
-                <div id="auth-buttons">
-                    <div class="animate-pulse bg-white/10 h-10 w-32 rounded-full"></div>
-                </div>
+            <div class="hidden md:flex items-center space-x-6 font-bold text-sm uppercase">
+                <a href="/" class="text-white hover:text-mlbb-gold transition">หน้าแรก</a>
+                <a href="topup.html" class="text-slate-400 hover:text-white transition">เติมเงิน</a>
+                <div id="auth-buttons">Loading...</div>
             </div>
         </div>
     </nav>
 
-    <header class="relative pt-32 pb-32 lg:pt-48 lg:pb-40 overflow-hidden">
-        <div class="absolute inset-0 overflow-hidden pointer-events-none">
-            <div class="absolute -top-1/2 -right-1/2 w-[100rem] h-[100rem] bg-gradient-to-b from-blue-900/30 to-transparent rounded-full blur-3xl"></div>
-        </div>
+    <header class="relative pt-32 pb-20 lg:pt-48 lg:pb-32 overflow-hidden">
+        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-mlbb-purple/20 rounded-full blur-[100px] pointer-events-none"></div>
         
         <div class="container mx-auto px-6 relative z-10 text-center">
-            <span class="inline-block py-1 px-3 rounded-full bg-blue-500/10 text-blue-300 text-sm font-semibold mb-6 border border-blue-500/20 backdrop-blur">
-                💎 The Premium Gaming Destination
-            </span>
-            <h1 class="text-5xl lg:text-7xl font-black mb-6 tracking-tight leading-tight text-transparent bg-clip-text bg-gradient-to-r from-white via-blue-100 to-slate-300 drop-shadow-sm">
-                อาณาจักรไอดีเกม<br><span class="text-transparent bg-clip-text bg-gradient-to-tr from-luxury-gold to-yellow-200">อันดับ 1</span>
+            <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/5 border border-white/10 mb-6 animate-float">
+                <span class="w-2 h-2 rounded-full bg-green-400 animate-pulse"></span>
+                <span class="text-xs font-bold text-mlbb-gold tracking-wider">MARKETPLACE FOR LEGENDS</span>
+            </div>
+            
+            <h1 class="text-5xl lg:text-7xl font-black mb-6 text-white leading-tight drop-shadow-xl">
+                THE LAND OF <br>
+                <span class="text-transparent bg-clip-text bg-gradient-to-r from-mlbb-gold via-yellow-200 to-mlbb-gold text-glow">VICTORY</span>
             </h1>
-            <p class="text-lg text-slate-300 max-w-2xl mx-auto mb-10 font-light leading-relaxed">
-                ระบบอัตโนมัติ 24 ชม. • ปลอดภัย 100% • รับประกันหลังการขาย<br>
-                เริ่มความเทพของคุณได้ที่นี่
+            
+            <p class="text-lg text-slate-400 max-w-xl mx-auto mb-10 font-light">
+                แหล่งรวมไอดี Mobile Legends คุณภาพสูง <br>
+                <span class="text-mlbb-blue font-bold">Mythical Glory</span> • 
+                <span class="text-purple-400 font-bold">Epic Skins</span> • 
+                <span class="text-white">ราคาคุ้มค่า</span>
             </p>
-            <div class="flex flex-col sm:flex-row justify-center gap-4">
-                <a href="#product-section" class="group relative px-8 py-4 bg-blue-600 rounded-full overflow-hidden shadow-neon transition-all hover:scale-105">
-                    <span class="relative text-white font-bold flex items-center justify-center gap-2">
-                        เลือกดูสินค้า 🛒
-                    </span>
+            
+            <div class="flex justify-center gap-4">
+                <a href="#product-section" class="px-8 py-3 bg-gradient-to-r from-mlbb-purple to-indigo-600 rounded-lg font-black text-white shadow-mythic hover:scale-105 transition transform">
+                    SHOP NOW 🛒
+                </a>
+                <a href="topup.html" class="px-8 py-3 bg-white/5 border border-white/10 rounded-lg font-bold text-white hover:bg-white/10 transition">
+                    TOPUP 💎
                 </a>
             </div>
         </div>
     </header>
 
-    <div class="container mx-auto px-6 -mt-20 relative z-20 mb-16">
-        <div class="bg-slate-800/60 backdrop-blur-xl border border-white/10 rounded-3xl p-6 md:p-8 shadow-[0_0_40px_rgba(0,0,0,0.5)] flex flex-col md:flex-row justify-around items-center gap-8 md:gap-0">
+    <div class="container mx-auto px-6 -mt-10 relative z-20 mb-20">
+        <div class="glass-moba rounded-2xl p-6 flex flex-wrap justify-around items-center gap-6 shadow-[0_0_50px_rgba(0,0,0,0.5)]">
             
-            <div class="flex items-center gap-4 group">
-                <div class="w-16 h-16 rounded-2xl bg-blue-500/10 border border-blue-500/20 flex items-center justify-center text-3xl group-hover:scale-110 transition-transform duration-500 shadow-[0_0_15px_rgba(59,130,246,0.2)]">
-                    👥
+            <div class="text-center w-full sm:w-auto">
+                <div class="text-mlbb-blue text-4xl font-black mb-1 flex justify-center items-center gap-1">
+                    <span id="stat-members">0</span>
                 </div>
-                <div>
-                    <p class="text-slate-400 text-sm font-medium uppercase tracking-wider mb-1">สมาชิกทั้งหมด</p>
-                    <h3 class="text-4xl font-black text-white flex items-baseline gap-1">
-                        <span id="stat-members" class="tabular-nums">0</span>
-                        <span class="text-lg text-blue-500 font-bold">+</span>
-                    </h3>
-                </div>
+                <div class="text-xs text-slate-500 uppercase tracking-widest font-bold">Summoners Joined</div>
             </div>
 
-            <div class="hidden md:block w-px h-16 bg-gradient-to-b from-transparent via-white/10 to-transparent"></div>
+            <div class="hidden sm:block w-px h-10 bg-white/10"></div>
 
-            <div class="flex items-center gap-4 group">
-                <div class="w-16 h-16 rounded-2xl bg-luxury-gold/10 border border-luxury-gold/20 flex items-center justify-center text-3xl group-hover:scale-110 transition-transform duration-500 shadow-[0_0_15px_rgba(251,191,36,0.2)]">
-                    🛒
+            <div class="text-center w-full sm:w-auto">
+                <div class="text-mlbb-gold text-4xl font-black mb-1 flex justify-center items-center gap-1">
+                    <span id="stat-sold">0</span>
                 </div>
-                <div>
-                    <p class="text-slate-400 text-sm font-medium uppercase tracking-wider mb-1">ขายออกไปแล้ว</p>
-                    <h3 class="text-4xl font-black text-white flex items-baseline gap-1">
-                        <span id="stat-sold" class="tabular-nums">0</span>
-                        <span class="text-lg text-luxury-gold font-bold">ชิ้น</span>
-                    </h3>
-                </div>
+                <div class="text-xs text-slate-500 uppercase tracking-widest font-bold">IDs Sold Out</div>
             </div>
+            
+             <div class="hidden sm:block w-px h-10 bg-white/10"></div>
 
-            <div class="hidden md:block w-px h-16 bg-gradient-to-b from-transparent via-white/10 to-transparent"></div>
-
-             <div class="flex items-center gap-4 group">
-                <div class="w-16 h-16 rounded-2xl bg-green-500/10 border border-green-500/20 flex items-center justify-center text-3xl group-hover:scale-110 transition-transform duration-500 shadow-[0_0_15px_rgba(34,197,94,0.2)]">
-                    🛡️
+            <div class="text-center w-full sm:w-auto">
+                <div class="text-green-400 text-xl font-bold mb-1 flex justify-center items-center gap-2 h-[40px]">
+                    ONLINE <span class="w-3 h-3 bg-green-500 rounded-full animate-ping"></span>
                 </div>
-                <div>
-                    <p class="text-slate-400 text-sm font-medium uppercase tracking-wider mb-1">สถานะระบบ</p>
-                    <h3 class="text-2xl font-bold text-green-400 flex items-center gap-2">
-                        ออนไลน์ <span class="relative flex h-3 w-3"><span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span><span class="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span></span>
-                    </h3>
-                </div>
+                <div class="text-xs text-slate-500 uppercase tracking-widest font-bold">Server Status</div>
             </div>
         </div>
     </div>
 
-    <main id="product-section" class="container mx-auto px-6 py-8 relative z-10 flex-grow">
-        <div class="flex items-center justify-between mb-12 border-b border-white/10 pb-4">
-            <div class="flex items-center gap-3">
-                <span class="text-3xl">🔥</span>
-                <h2 class="text-3xl font-bold text-white">EXCLUSIVE ITEMS</h2>
+    <main id="product-section" class="container mx-auto px-6 pb-20">
+        <div class="flex items-end justify-between mb-10 border-b border-white/10 pb-4">
+            <div>
+                <h2 class="text-3xl font-black text-white italic">MYTHIC ITEMS</h2>
+                <div class="h-1 w-20 bg-mlbb-gold mt-2 rounded-full"></div>
             </div>
-            <span class="text-slate-400 text-sm hidden sm:block">คัดสรรเฉพาะไอดีคุณภาพเยี่ยม</span>
+            <div class="flex gap-2">
+                 <button class="px-3 py-1 text-xs bg-mlbb-purple text-white rounded font-bold">ALL</button>
+                <button class="px-3 py-1 text-xs bg-white/5 text-slate-400 rounded hover:bg-white/10 transition">High Rank</button>
+            </div>
         </div>
 
-        <div id="product-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div id="product-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             <div class="col-span-full py-20 text-center">
-                <div class="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-white mb-4"></div>
-                <p class="text-slate-400">Loading...</p>
+                <div class="animate-spin text-4xl">⚔️</div>
+                <p class="text-slate-500 mt-4">Summoning Heroes...</p>
             </div>
         </div>
     </main>
 
-    <footer class="bg-slate-950/80 backdrop-blur-xl border-t border-white/5 py-12 mt-20">
+    <footer class="bg-[#05060e] border-t border-white/5 py-10 mt-auto">
         <div class="container mx-auto px-6 text-center">
-            <h3 class="font-black text-2xl text-slate-700 mb-2">1K STORE</h3>
-            <p class="text-slate-500 text-sm">
-                © 2026 1K Store. All rights reserved.
-            </p>
+            <p class="text-mlbb-gold font-bold text-xl mb-2">1K STORE</p>
+            <p class="text-slate-600 text-sm">© 2026 Mobile Legends ID Market. All rights reserved.</p>
         </div>
     </footer>
 
     <script>
-        // 1. ตรวจสอบสถานะการล็อกอิน
+        // 1. Auth & Navbar
         function checkAuth() {
             const username = localStorage.getItem('username');
             const points = localStorage.getItem('points') || 0;
             const container = document.getElementById('auth-buttons');
 
             if (username) {
-                // ล็อกอินแล้ว -> โชว์ชื่อ (คลิกไป Dashboard) + พอยท์ + ปุ่ม Logout
                 container.innerHTML = `
-                    <div class="flex items-center gap-4 bg-white/5 pl-4 pr-2 py-1.5 rounded-full border border-white/10 backdrop-blur-lg shadow-sm">
-                        <a href="dashboard.html" class="text-right hidden lg:block hover:opacity-80 transition cursor-pointer">
-                            <div class="font-bold text-white leading-tight">${username}</div>
-                            <div class="text-[10px] text-blue-300 uppercase tracking-wider">Member • View Profile</div>
+                    <div class="flex items-center gap-3">
+                        <a href="dashboard.html" class="flex items-center gap-2 group cursor-pointer">
+                            <div class="text-right hidden lg:block">
+                                <div class="text-white font-bold text-sm group-hover:text-mlbb-gold transition">${username}</div>
+                                <div class="text-[10px] text-mlbb-blue font-bold">MEMBER</div>
+                            </div>
+                             <div class="w-8 h-8 bg-slate-700 rounded-full border border-white/20 flex items-center justify-center">👤</div>
                         </a>
-                        <div class="flex items-center gap-1 px-3 py-1 bg-gradient-to-r from-luxury-gold/20 to-transparent rounded-full border border-luxury-gold/30">
-                            <span class="text-luxury-gold text-sm">🪙</span>
-                            <span class="font-bold text-luxury-gold">${parseFloat(points).toLocaleString()}</span>
+                        <div class="flex items-center gap-1 px-3 py-1 bg-mlbb-gold/10 border border-mlbb-gold/30 rounded-lg">
+                            <span class="text-mlbb-gold text-xs">💎</span>
+                            <span class="font-bold text-mlbb-gold text-sm">${parseFloat(points).toLocaleString()}</span>
                         </div>
-                        <button onclick="logout()" class="w-8 h-8 flex items-center justify-center rounded-full bg-white/10 text-slate-300 hover:bg-red-500/20 hover:text-red-400 transition" title="ออกจากระบบ">
-                             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-                            </svg>
-                        </button>
+                        <button onclick="logout()" class="text-slate-500 hover:text-red-400 transition"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg></button>
                     </div>
                 `;
             } else {
-                // ยังไม่ล็อกอิน -> ปุ่มเข้าสู่ระบบ
                 container.innerHTML = `
-                    <a href="login.html" class="relative group overflow-hidden px-6 py-2.5 rounded-full bg-gradient-to-r from-blue-600 to-blue-400 text-white font-bold shadow-lg transition-all hover:shadow-neon hover:scale-105 active:scale-95">
-                        <span class="relative z-10">เข้าสู่ระบบ</span>
-                        <div class="absolute inset-0 h-full w-full bg-gradient-to-r from-blue-400 to-blue-600 scale-x-0 group-hover:scale-x-100 transition-transform origin-left"></div>
+                    <a href="login.html" class="px-5 py-2 bg-mlbb-blue hover:bg-blue-500 text-white text-xs font-black rounded skew-x-[-10deg] shadow-lg transition inline-block">
+                        <span class="skew-x-[10deg] inline-block">LOGIN</span>
                     </a>
                 `;
             }
         }
 
-        // 2. ฟังก์ชันออกจากระบบ
         function logout() {
             Swal.fire({
-                title: 'ออกจากระบบ?',
-                icon: 'warning',
-                background: '#1e293b', color: '#fff',
+                title: 'Logout?',
+                icon: 'question',
+                background: '#131629', color: '#fff',
                 showCancelButton: true,
-                confirmButtonColor: '#3b82f6', cancelButtonColor: '#d33',
-                confirmButtonText: 'ยืนยัน'
-            }).then((result) => {
-                if (result.isConfirmed) {
+                confirmButtonColor: '#d33', confirmButtonText: 'Yes'
+            }).then((res) => {
+                if (res.isConfirmed) {
                     localStorage.clear();
                     location.reload();
                 }
             });
         }
 
-        // 3. โหลดสินค้า
+        // 2. Load Products (Custom MLBB Design)
         async function loadProducts() {
             try {
                 const res = await fetch('/api/get_products');
@@ -248,56 +231,55 @@
                 container.innerHTML = '';
 
                 if(products.length === 0) {
-                    container.innerHTML = `
-                        <div class="col-span-full text-center py-20 bg-white/5 rounded-3xl border border-white/10 backdrop-blur-sm">
-                            <p class="text-slate-400 text-lg tracking-wider uppercase">No Items Available Yet</p>
-                        </div>
-                    `;
+                    container.innerHTML = `<div class="col-span-full text-center text-slate-500 py-10">No accounts available right now.</div>`;
                     return;
                 }
 
                 products.forEach((p, index) => {
-                    const img = (p.images && p.images.length > 0) ? p.images[0] : 'https://via.placeholder.com/400x300?text=No+Image';
-                    const delay = index * 100; // เรียงลำดับการเด้ง
+                    const img = (p.images && p.images.length) ? p.images[0] : 'https://via.placeholder.com/400x300/131629/ffffff?text=MLBB+Account';
+                    
+                    // สุ่ม Rank Badge จำลอง (ในการใช้งานจริงอาจเก็บใน DB)
+                    const rankColor = index % 2 === 0 ? 'text-mlbb-gold' : 'text-purple-400';
+                    const rankName = index % 2 === 0 ? 'MYTHIC' : 'LEGEND';
 
                     container.innerHTML += `
-                        <div class="group relative bg-slate-800/40 backdrop-blur-md rounded-3xl overflow-hidden border border-white/10 transition-all duration-500 hover:border-blue-500/50 hover:shadow-neon hover:-translate-y-2 h-full flex flex-col" style="animation: fadeUp 0.6s ease backwards ${delay}ms">
-                            <div class="relative h-56 overflow-hidden">
-                                <div class="absolute inset-0 bg-gradient-to-t from-slate-900 via-transparent to-transparent z-10 opacity-60"></div>
-                                <img src="${img}" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 group-hover:rotate-1">
-                                <div class="absolute top-3 right-3 z-20">
-                                    <span class="px-3 py-1 text-xs font-bold text-white bg-blue-600/80 backdrop-blur rounded-full shadow-sm">💎 READY</span>
+                        <div class="group relative bg-[#131629] border border-white/5 rounded-xl overflow-hidden hover:border-mlbb-gold/50 hover:shadow-victory transition-all duration-300 hover:-translate-y-2 flex flex-col h-full">
+                            <div class="relative h-48 overflow-hidden">
+                                <img src="${img}" class="w-full h-full object-cover group-hover:scale-110 transition duration-700">
+                                <div class="absolute inset-0 bg-gradient-to-t from-[#131629] to-transparent"></div>
+                                <div class="absolute top-2 right-2 px-2 py-0.5 bg-black/60 backdrop-blur rounded border border-white/10">
+                                    <span class="text-[10px] font-bold ${rankColor}">${rankName}</span>
                                 </div>
                             </div>
-                            <div class="p-6 flex-grow flex flex-col relative z-20">
-                                <h3 class="text-xl font-bold text-white mb-2 line-clamp-1 group-hover:text-blue-400 transition">${p.name}</h3>
-                                <p class="text-slate-400 text-sm line-clamp-2 mb-6 flex-grow font-light">${p.description || 'รายละเอียดสินค้า...'}</p>
-                                <div class="flex items-end justify-between mt-auto pt-4 border-t border-white/5">
-                                    <div class="flex flex-col">
-                                        <span class="text-[10px] text-slate-500 uppercase tracking-wider mb-1">Price</span>
-                                        <span class="text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-luxury-gold to-yellow-200">
-                                            ฿${parseFloat(p.price).toLocaleString()}
-                                        </span>
+                            
+                            <div class="p-4 flex-grow flex flex-col">
+                                <h3 class="text-white font-bold text-lg leading-tight mb-2 line-clamp-1 group-hover:text-mlbb-blue transition">${p.name}</h3>
+                                <p class="text-slate-400 text-xs line-clamp-2 mb-4 font-light">${p.description}</p>
+                                
+                                <div class="mt-auto flex items-center justify-between border-t border-white/5 pt-3">
+                                    <div>
+                                        <div class="text-[10px] text-slate-500 uppercase">Price</div>
+                                        <div class="text-xl font-black text-mlbb-gold">฿${parseFloat(p.price).toLocaleString()}</div>
                                     </div>
-                                    <a href="product.html?id=${p.id}" class="bg-blue-600 text-white px-5 py-2.5 rounded-xl font-bold hover:bg-blue-500 transition shadow-lg">
-                                        ซื้อสินค้า
+                                    <a href="product.html?id=${p.id}" class="w-10 h-10 bg-white/5 hover:bg-mlbb-gold hover:text-black rounded-lg flex items-center justify-center text-white transition">
+                                        🛒
                                     </a>
                                 </div>
                             </div>
                         </div>
                     `;
                 });
-            } catch(err) { console.error(err); }
+            } catch(e) { console.error(e); }
         }
 
-        // 4. โหลดสถิติและทำตัวเลขวิ่ง
+        // 3. Stats Animation
         async function loadStats() {
             try {
                 const res = await fetch('/api/get_stats');
                 const data = await res.json();
                 animateValue("stat-members", 0, data.members, 2000);
                 animateValue("stat-sold", 0, data.sold, 2000);
-            } catch (err) { console.error("Stats Error:", err); }
+            } catch(e) { console.error(e); }
         }
 
         function animateValue(id, start, end, duration) {
@@ -312,18 +294,6 @@
             };
             window.requestAnimationFrame(step);
         }
-
-        // Navbar Styling on Scroll
-        window.addEventListener('scroll', () => {
-            const nav = document.querySelector('nav');
-            if (window.scrollY > 50) {
-                nav.classList.add('bg-slate-950/80', 'border-b', 'border-white/10');
-                nav.classList.remove('bg-transparent', 'border-transparent');
-            } else {
-                nav.classList.remove('bg-slate-950/80', 'border-b', 'border-white/10');
-                nav.classList.add('bg-transparent', 'border-transparent');
-            }
-        });
 
         // Start
         checkAuth();

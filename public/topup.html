@@ -7,7 +7,6 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600;900&display=swap" rel="stylesheet">
-    
     <script>
         tailwind.config = {
             theme: {
@@ -22,100 +21,141 @@
         body { background-color: #0f172a; color: #e2e8f0; }
         .glass-input { background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); backdrop-filter: blur(10px); }
         .glass-input:focus { border-color: #fbbf24; outline: none; background: rgba(255, 255, 255, 0.1); }
+        .tab-btn.active { background-color: #fbbf24; color: #0f172a; font-weight: bold; }
+        .tab-btn { background-color: rgba(255,255,255,0.05); color: #94a3b8; }
     </style>
 </head>
 <body class="min-h-screen flex flex-col items-center justify-center p-4 relative overflow-hidden">
 
     <div class="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
         <div class="absolute top-1/4 left-1/4 w-96 h-96 bg-blue-600/20 rounded-full blur-3xl"></div>
-        <div class="absolute bottom-1/4 right-1/4 w-96 h-96 bg-luxury-gold/10 rounded-full blur-3xl"></div>
     </div>
 
     <div class="relative z-10 w-full max-w-md bg-slate-900/80 backdrop-blur-xl border border-white/10 p-8 rounded-3xl shadow-2xl">
         
-        <div class="text-center mb-8">
+        <div class="text-center mb-6">
             <h1 class="text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-luxury-gold to-yellow-200 mb-2">
                 เติมเงินพอยท์
             </h1>
-            <p class="text-slate-400 text-sm">ระบบอัตโนมัติด้วยซองของขวัญ (TrueMoney)</p>
+            <p class="text-slate-400 text-sm">เลือกช่องทางการเติมเงิน</p>
         </div>
 
-        <div class="space-y-6">
-            <div>
-                <label class="block text-slate-300 text-sm mb-2 font-medium">ลิงก์ซองของขวัญ</label>
-                <input id="gift-link" type="text" 
-                    placeholder="https://gift.truemoney.com/campaign/?v=..." 
-                    class="glass-input w-full rounded-xl px-4 py-3 text-white placeholder-slate-500 transition-all">
-                <p class="text-xs text-slate-500 mt-2 ml-1">
-                    * สร้างซองแบบ "แบ่งจำนวนเงินเท่ากัน" เท่านั้น
-                </p>
-            </div>
+        <div class="flex gap-2 mb-6">
+            <button onclick="switchTab('gift')" id="btn-gift" class="tab-btn active flex-1 py-3 rounded-xl transition">
+                🧧 ซองของขวัญ
+            </button>
+            <button onclick="switchTab('slip')" id="btn-slip" class="tab-btn flex-1 py-3 rounded-xl transition">
+                🏦 สแกนจ่าย (Auto)
+            </button>
+        </div>
 
-            <button onclick="handleTopup()" class="w-full bg-gradient-to-r from-luxury-gold to-orange-500 hover:from-yellow-400 hover:to-orange-400 text-slate-900 font-black py-4 rounded-xl shadow-lg transform transition active:scale-95">
+        <div id="tab-gift" class="space-y-6">
+            <div>
+                <label class="block text-slate-300 text-sm mb-2 font-medium">ลิงก์ซองของขวัญ (TrueMoney)</label>
+                <input id="gift-link" type="text" placeholder="https://gift.truemoney.com/..." class="glass-input w-full rounded-xl px-4 py-3 text-white">
+                <p class="text-xs text-slate-500 mt-2">* สร้างซองแบบ "แบ่งจำนวนเงินเท่ากัน"</p>
+            </div>
+            <button onclick="handleTopup('gift')" class="w-full bg-gradient-to-r from-luxury-gold to-orange-500 text-slate-900 font-black py-4 rounded-xl shadow-lg hover:scale-[1.02] transition">
                 ยืนยันการเติมเงิน
             </button>
-
-            <a href="/" class="block text-center text-slate-500 hover:text-white text-sm transition mt-4">
-                ยกเลิก / กลับหน้าร้าน
-            </a>
         </div>
+
+        <div id="tab-slip" class="space-y-6 hidden">
+            
+            <div class="bg-white p-4 rounded-xl shadow-lg text-center">
+                <img src="qrcode.jpg" alt="QR Code" class="w-48 h-48 mx-auto mb-4 rounded-lg object-contain border border-gray-200">
+                
+                <div class="border-t border-gray-200 pt-3">
+                    <p class="text-gray-500 text-xs uppercase mb-1 font-bold">ธนาคารกสิกรไทย</p>
+                    <h3 class="text-2xl font-black text-slate-800 tracking-wider">176-3-66869-6</h3>
+                    <p class="text-slate-600 text-sm font-medium mt-1">อติรุจ พุทธิดิลก</p>
+                </div>
+            </div>
+
+            <div class="border-2 border-dashed border-slate-600 rounded-xl p-6 text-center hover:border-luxury-gold transition cursor-pointer relative group" onclick="document.getElementById('slip-file').click()">
+                <input type="file" id="slip-file" accept="image/*" class="hidden" onchange="previewSlip()">
+                <div id="upload-placeholder" class="group-hover:scale-105 transition">
+                    <div class="text-4xl mb-2">📸</div>
+                    <p class="text-slate-400 text-sm">คลิกเพื่อแนบสลิปโอนเงิน</p>
+                </div>
+                <img id="slip-preview" class="hidden w-full rounded-lg shadow-lg">
+            </div>
+
+            <button onclick="handleTopup('slip')" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-4 rounded-xl shadow-lg hover:scale-[1.02] transition">
+                ยืนยัน / ตรวจสอบสลิป
+            </button>
+        </div>
+
+        <a href="/" class="block text-center text-slate-500 hover:text-white text-sm transition mt-6">กลับหน้าร้าน</a>
     </div>
 
     <script>
-        async function handleTopup() {
-            const link = document.getElementById('gift-link').value.trim();
-            const userId = localStorage.getItem('user_id');
+        function switchTab(tab) {
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById(`btn-${tab}`).classList.add('active');
+            document.getElementById('tab-gift').classList.add('hidden');
+            document.getElementById('tab-slip').classList.add('hidden');
+            document.getElementById(`tab-${tab}`).classList.remove('hidden');
+        }
 
-            // 1. ตรวจสอบเบื้องต้น
-            if (!userId) return window.location.href = '/login.html';
-            if (!link.includes('gift.truemoney.com')) {
-                return Swal.fire({
-                    icon: 'error',
-                    title: 'ลิงก์ไม่ถูกต้อง',
-                    text: 'กรุณาใส่ลิงก์ซองของขวัญ TrueMoney ที่ถูกต้องครับ',
-                    background: '#1e293b', color: '#fff'
-                });
+        function previewSlip() {
+            const file = document.getElementById('slip-file').files[0];
+            if (file) {
+                document.getElementById('upload-placeholder').classList.add('hidden');
+                const img = document.getElementById('slip-preview');
+                img.src = URL.createObjectURL(file);
+                img.classList.remove('hidden');
             }
+        }
 
-            // 2. ส่งข้อมูล
-            try {
-                Swal.fire({
-                    title: 'กำลังตรวจสอบ...',
-                    text: 'ระบบกำลังดำเนินการ กรุณารอสักครู่',
-                    allowOutsideClick: false,
-                    didOpen: () => Swal.showLoading(),
-                    background: '#1e293b', color: '#fff'
-                });
+        async function handleTopup(method) {
+            const userId = localStorage.getItem('user_id');
+            if (!userId) return window.location.href = '/login.html';
 
-                const res = await fetch('/api/topup', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ userId, link })
-                });
-
-                const data = await res.json();
-
-                if (data.success) {
-                    await Swal.fire({
-                        icon: 'success',
-                        title: 'เติมเงินสำเร็จ!',
-                        text: `ได้รับ ${data.amount} พอยท์ เรียบร้อยแล้วครับ`,
-                        background: '#1e293b', color: '#fff',
-                        confirmButtonColor: '#fbbf24', confirmButtonText: '<span style="color:black">ตกลง</span>'
+            if (method === 'gift') {
+                const link = document.getElementById('gift-link').value.trim();
+                if (!link.includes('gift.truemoney.com')) return Swal.fire({icon:'error', title:'ลิงก์ไม่ถูกต้อง', background:'#1e293b', color:'#fff'});
+                
+                // ส่งไปเช็คซอง (ใช้ api/topup.js ตัวเดิม)
+                Swal.fire({ title: 'กำลังตรวจสอบ...', didOpen: () => Swal.showLoading(), background: '#1e293b', color: '#fff' });
+                try {
+                    const res = await fetch('/api/topup', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ userId, method: 'gift', link })
                     });
-                    window.location.href = '/dashboard.html';
-                } else {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'ไม่สำเร็จ',
-                        text: data.msg || 'เกิดข้อผิดพลาด',
-                        background: '#1e293b', color: '#fff'
-                    });
-                }
+                    const data = await res.json();
+                    if (data.success) {
+                        Swal.fire({ icon: 'success', title: 'สำเร็จ!', text: `ได้รับ ${data.amount} พอยท์`, background: '#1e293b', color: '#fff' }).then(() => window.location.href = '/dashboard.html');
+                    } else {
+                        Swal.fire({ icon: 'error', title: 'ไม่สำเร็จ', text: data.msg, background: '#1e293b', color: '#fff' });
+                    }
+                } catch(e) { console.error(e); }
+            } 
+            else if (method === 'slip') {
+                const fileInput = document.getElementById('slip-file');
+                if (fileInput.files.length === 0) return Swal.fire({icon:'warning', title:'กรุณาแนบสลิป', background:'#1e293b', color:'#fff'});
+                
+                Swal.fire({ title: 'กำลังตรวจสอบสลิป...', didOpen: () => Swal.showLoading(), background: '#1e293b', color: '#fff' });
 
-            } catch (err) {
-                console.error(err);
-                Swal.fire({ icon: 'error', title: 'Error', text: 'เชื่อมต่อเซิร์ฟเวอร์ไม่ได้', background: '#1e293b', color: '#fff' });
+                const reader = new FileReader();
+                reader.readAsDataURL(fileInput.files[0]);
+                reader.onload = async function () {
+                    const base64Image = reader.result;
+                    try {
+                        const res = await fetch('/api/topup_slipok', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ userId, image: base64Image })
+                        });
+                        const data = await res.json();
+                        if (data.success) {
+                            Swal.fire({ icon: 'success', title: 'สำเร็จ!', text: `ได้รับ ${data.amount} พอยท์`, background: '#1e293b', color: '#fff' }).then(() => window.location.href = '/dashboard.html');
+                        } else {
+                            Swal.fire({ icon: 'error', title: 'ตรวจสอบไม่ผ่าน', text: data.msg, background: '#1e293b', color: '#fff' });
+                        }
+                    } catch (err) { console.error(err); }
+                };
             }
         }
     </script>
